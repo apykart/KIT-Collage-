@@ -1997,10 +1997,14 @@
             <li role="none"><a href="#home" role="menuitem" class="active">Home</a></li>
             <li role="none"><a href="#about" role="menuitem">About</a></li>
             <li role="none"><a href="#academics" role="menuitem">Academics</a></li>
+            <li role="none"><a href="#faculty" role="menuitem">Faculty</a></li>
             <li role="none"><a href="#admissions" role="menuitem">Admissions</a></li>
             <li role="none"><a href="#campus" role="menuitem">Campus</a></li>
             <li role="none"><a href="#gallery" role="menuitem">Gallery</a></li>
-            <li role="none"><a href="#notices" role="menuitem">Notices</a></li>
+<li role="none"><a href="#events" role="menuitem">Events</a></li>
+<li role="none"><a href="#notices" role="menuitem">Notices</a></li>
+<li role="none"><a href="#documents" role="menuitem">Downloads</a></li>
+            <li role="none"><a href="#documents" role="menuitem">Downloads</a></li>
             <li role="none"><a href="#contact" role="menuitem">Contact</a></li>
         </ul>
         <div class="nav-cta">
@@ -2013,16 +2017,19 @@
 
     <!-- ===== MOBILE MENU ===== -->
     <div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#academics">Academics</a></li>
-            <li><a href="#admissions">Admissions</a></li>
-            <li><a href="#campus">Campus</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-            <li><a href="#notices">Notices</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+       <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#academics">Academics</a></li>
+    <li><a href="#faculty">Faculty</a></li>
+    <li><a href="#admissions">Admissions</a></li>
+    <li><a href="#campus">Campus</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#notices">Notices</a></li>
+    <li><a href="#documents">Downloads</a></li>
+    <li><a href="#contact">Contact</a></li>
+</ul>
         <div class="mobile-cta">
             <a href="#enquiry" class="btn btn-primary btn-lg">Apply Now</a>
         </div>
@@ -2186,6 +2193,22 @@
             </div>
         </div>
     </section>
+    
+<!-- ===== FACULTY ===== -->
+<section class="academics-section section-padding" id="faculty" aria-label="Our Faculty" style="background:var(--off-white);">
+    <div class="container">
+        <div class="text-center fade-up">
+            <span class="section-label">Our Faculty</span>
+            <h2 class="section-title">Meet Our Educators</h2>
+            <p class="section-subtitle">Experienced faculty members dedicated to student success.</p>
+        </div>
+        <div class="academics-grid" id="facultyGrid">
+            <div class="notice-placeholder" style="grid-column:1/-1;">
+                <p><i class="fas fa-info-circle"></i> Faculty details will appear here soon.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
     <!-- ===== CAMPUS ===== -->
     <section class="campus-section section-padding" id="campus" aria-label="Campus and facilities">
@@ -2303,23 +2326,23 @@
 <section class="enquiry-section section-padding" id="enquiry" aria-label="Enquiry form">
     <div class="container">
         <div class="enquiry-wrapper">
-            <div class="enquiry-info fade-up">
-                <h3>Get in Touch</h3>
-                <p>We're here to help you make informed decisions about your academic journey. Reach out with any
-                    questions.</p>
-                <div class="enquiry-contact-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Santipuram, Prayagraj, Uttar Pradesh, India</span>
-                </div>
-                <div class="enquiry-contact-item">
-                    <i class="fas fa-envelope"></i>
-                    <span>kitcollege8@gmail.com</span>
-                </div>
-                <div class="enquiry-contact-item">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>+91 88877 93275</span>
-                </div>
-            </div>
+           <div class="enquiry-info fade-up">
+    <h3>Get in Touch</h3>
+    <p>We're here to help you make informed decisions about your academic journey. Reach out with any
+        questions.</p>
+    <div class="enquiry-contact-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <span id="cfgAddress1">Santipuram, Prayagraj, Uttar Pradesh, India</span>
+    </div>
+    <div class="enquiry-contact-item">
+        <i class="fas fa-envelope"></i>
+        <span id="cfgEmail1">kitcollege8@gmail.com</span>
+    </div>
+    <div class="enquiry-contact-item">
+        <i class="fab fa-whatsapp"></i>
+        <span id="cfgWhatsApp1">+91 88877 93275</span>
+    </div>
+</div>
             <div class="enquiry-form-wrapper fade-up fade-up-delay-1">
                 <h3>Admission Enquiry Form</h3>
                 <form id="enquiryForm" novalidate aria-label="Admission enquiry form">
@@ -2378,6 +2401,21 @@
         </div>
     </div>
 </section>
+      <!-- ===== EVENTS ===== -->
+<section class="campus-section section-padding" id="events" aria-label="Upcoming Events">
+    <div class="container">
+        <div class="text-center fade-up">
+            <span class="section-label">Events</span>
+            <h2 class="section-title">Upcoming Events</h2>
+            <p class="section-subtitle">Stay updated with campus events and activities.</p>
+        </div>
+        <div class="campus-grid" id="eventsGrid">
+            <div class="notice-placeholder" style="grid-column:1/-1;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);">
+                <p><i class="fas fa-info-circle"></i> Upcoming events will be announced here.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- ===== NOTICES ===== -->
 <section class="notices-section section-padding" id="notices" aria-label="Notices and announcements">
@@ -2389,6 +2427,21 @@
         </div>
         <div class="notices-grid" id="noticesGrid">
             <!-- injected by JS -->
+        </div>
+    </div>
+</section>
+<!-- ===== DOCUMENTS ===== -->
+<section class="notices-section section-padding" id="documents" aria-label="Downloads and Documents">
+    <div class="container">
+        <div class="text-center fade-up">
+            <span class="section-label">Downloads</span>
+            <h2 class="section-title">Documents &amp; Downloads</h2>
+            <p class="section-subtitle">Access prospectus, syllabus, and important documents.</p>
+        </div>
+        <div class="notices-grid" id="documentsGrid">
+            <div class="notice-placeholder" style="grid-column:1/-1;">
+                <p><i class="fas fa-info-circle"></i> Documents will appear here soon.</p>
+            </div>
         </div>
     </div>
 </section>
@@ -2410,22 +2463,21 @@
                     <div class="contact-icon"><i class="fas fa-envelope"></i></div>
                     <div class="contact-detail">
                         <h4>Email</h4>
-                        <a href="mailto:kitcollege8@gmail.com">kitcollege8@gmail.com</a>
+                        <a href="mailto:kitcollege8@gmail.com" id="cfgEmailLink">kitcollege8@gmail.com</a>
                     </div>
                 </div>
                 <div class="contact-item">
                     <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
                     <div class="contact-detail">
                         <h4>WhatsApp</h4>
-                        <a href="https://wa.me/918887793275" target="_blank" rel="noopener noreferrer">+91 88877
-                        93275</a>
+                        <a href="https://wa.me/918887793275" target="_blank" rel="noopener noreferrer" id="cfgFooterWa">+91 88877 93275</a>
                     </div>
                 </div>
                 <div class="contact-item">
                     <div class="contact-icon"><i class="fas fa-phone"></i></div>
                     <div class="contact-detail">
                         <h4>Call</h4>
-                        <a href="tel:+918887793275">+91 88877 93275</a>
+                        <a href="tel:+918887793275" id="cfgTelLink">+91 88877 93275</a>
                     </div>
                 </div>
                 <div class="contact-buttons">
@@ -2472,11 +2524,11 @@
                 <h4>Contact</h4>
                 <div class="footer-contact-item">
                     <i class="fas fa-envelope"></i>
-                    <a href="mailto:kitcollege8@gmail.com">kitcollege8@gmail.com</a>
+                    <a href="mailto:kitcollege8@gmail.com" id="cfgFooterEmail">kitcollege8@gmail.com</a>
                 </div>
                 <div class="footer-contact-item">
                     <i class="fab fa-whatsapp"></i>
-                    <a href="https://wa.me/918887793275" target="_blank" rel="noopener noreferrer">+91 88877 93275</a>
+                    <a href="https://wa.me/918887793275" target="_blank" rel="noopener noreferrer" id="cfgWaLink">+91 88877 93275</a>
                 </div>
                 <div class="footer-contact-item">
                     <i class="fas fa-map-marker-alt"></i>
@@ -2503,10 +2555,9 @@
 </footer>
 
 <!-- ===== FLOATING WHATSAPP ===== -->
-<a href="https://wa.me/918887793275?text=Hello%20KIT%20College%2C%20I%20would%20like%20to%20enquire%20about%20admissions."
-target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="Chat with us on WhatsApp">
-<i class="fab fa-whatsapp"></i>
-<span class="wa-text">Chat with us</span>
+<a href="https://wa.me/918887793275?text=Hello%20KIT%20College%2C%20I%20would%20like%20to%20enquire%20about%20admissions." target="_blank" rel="noopener noreferrer" class="floating-whatsapp" id="floatingWaBtn" aria-label="Chat with us on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+    <span class="wa-text">Chat with us</span>
 </a>
 
 <!-- ===== BACK TO TOP ===== -->
@@ -2619,14 +2670,15 @@ target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="
                UTILITY: Cloudinary URL builder
                ================================================================ */
             function cloudinaryUrl(sourceUrl, w, h, c) {
-                // If sourceUrl is already a Cloudinary URL, return as-is
-                if (sourceUrl.includes('res.cloudinary.com')) return sourceUrl;
-                const width = w || 800;
-                const height = h || 600;
-                const crop = c || 'fill';
-                return `${CLOUDINARY_BASE}w_${width},h_${height},c_${crop},q_auto,f_auto/${encodeURIComponent(sourceUrl)}`;
-            }
-
+    if (!sourceUrl) return '';
+    if (sourceUrl.includes('res.cloudinary.com') || sourceUrl.includes('firebasestorage.googleapis.com')) {
+        return sourceUrl;
+    }
+    const width = w || 800;
+    const height = h || 600;
+    const crop = c || 'fill';
+    return `${CLOUDINARY_BASE}w_${width},h_${height},c_${crop},q_auto,f_auto/${encodeURIComponent(sourceUrl)}`;
+}
             /* ================================================================
                FIRESTORE SYNC — pulls admin-added gallery images & notices
                ================================================================ */
@@ -2647,7 +2699,138 @@ target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="
                     })
                     .catch(err => console.error('Gallery fetch error:', err));
             }
+            
+            function loadCoursesFromFirestore() {
+    db.collection('courses').where('status', '==', 'Active').orderBy('order', 'asc').get()
+        .then((snapshot) => {
+            const grid = document.getElementById('academicsGrid');
+            if (!grid || snapshot.empty) return;
+            grid.innerHTML = snapshot.docs.map(doc => {
+                const d = doc.data();
+                return `<div class="academic-card fade-up">
+                    <div class="acad-icon"><i class="fas fa-book-open"></i></div>
+                    <h3>${d.name || 'Course'}</h3>
+                    <p>${d.shortDesc || ''}</p>
+                </div>`;
+            }).join('');
+            initScrollAnimations();
+        })
+        .catch(err => console.error('Courses fetch error:', err));
+}
+function loadFacultyFromFirestore() {
+    db.collection('faculty').where('status', '==', 'Active').orderBy('order', 'asc').get()
+        .then((snapshot) => {
+            const grid = document.getElementById('facultyGrid');
+            if (!grid) return;
+            if (snapshot.empty) {
+                grid.innerHTML = `<div class="notice-placeholder" style="grid-column:1/-1;"><p><i class="fas fa-info-circle"></i> Faculty details will appear here soon.</p></div>`;
+                return;
+            }
+            grid.innerHTML = snapshot.docs.map(doc => {
+                const d = doc.data();
+                const photo = d.photo ? cloudinaryUrl(d.photo, 300, 300, 'fill') : '';
+                return `<div class="academic-card fade-up">
+                    ${photo ? `<img src="${photo}" alt="${d.name||'Faculty'}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;margin:0 auto 14px;" />` : `<div class="acad-icon"><i class="fas fa-user-tie"></i></div>`}
+                    <h3>${d.name || 'Faculty Member'}</h3>
+                    <p><strong>${d.designation || ''}</strong>${d.department ? ' — ' + d.department : ''}</p>
+                    <p>${d.qualification || ''}</p>
+                </div>`;
+            }).join('');
+            initScrollAnimations();
+        })
+        .catch(err => console.error('Faculty fetch error:', err));
+}
 
+function loadFacilitiesFromFirestore() {
+    db.collection('facilities').where('status', '==', 'Active').orderBy('order', 'asc').get()
+        .then((snapshot) => {
+            const grid = document.querySelector('.campus-grid');
+            if (!grid || snapshot.empty) return;
+            grid.innerHTML = snapshot.docs.map(doc => {
+                const d = doc.data();
+                return `<div class="campus-facility-card fade-up">
+                    <div class="facility-icon"><i class="fas ${d.icon || 'fa-building'}"></i></div>
+                    <h3>${d.name || 'Facility'}</h3>
+                    <p>${d.description || ''}</p>
+                </div>`;
+            }).join('');
+            initScrollAnimations();
+        })
+        .catch(err => console.error('Facilities fetch error:', err));
+}
+
+function loadEventsFromFirestore() {
+    db.collection('events').where('status', '==', 'Upcoming').orderBy('eventDate', 'asc').get()
+        .then((snapshot) => {
+            const grid = document.getElementById('eventsGrid');
+            if (!grid) return;
+            if (snapshot.empty) {
+                grid.innerHTML = `<div class="notice-placeholder" style="grid-column:1/-1;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);"><p><i class="fas fa-info-circle"></i> Upcoming events will be announced here.</p></div>`;
+                return;
+            }
+            grid.innerHTML = snapshot.docs.map(doc => {
+                const d = doc.data();
+                const dateStr = d.eventDate ? new Date(d.eventDate).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) : '';
+                return `<div class="campus-facility-card fade-up">
+                    <div class="facility-icon"><i class="fas fa-calendar-day"></i></div>
+                    <h3>${d.title || 'Event'}</h3>
+                    <p>${dateStr}${d.time ? ' • ' + d.time : ''}</p>
+                    <p>${d.location || ''}</p>
+                </div>`;
+            }).join('');
+            initScrollAnimations();
+        })
+        .catch(err => console.error('Events fetch error:', err));
+}
+
+function loadDocumentsFromFirestore() {
+    db.collection('documents').orderBy('createdAt', 'desc').get()
+        .then((snapshot) => {
+            const grid = document.getElementById('documentsGrid');
+            if (!grid) return;
+            if (snapshot.empty) {
+                grid.innerHTML = `<div class="notice-placeholder" style="grid-column:1/-1;"><p><i class="fas fa-info-circle"></i> Documents will appear here soon.</p></div>`;
+                return;
+            }
+            grid.innerHTML = snapshot.docs.map(doc => {
+                const d = doc.data();
+                return `<div class="notice-card fade-up">
+                    <div class="notice-icon"><i class="fas fa-file-pdf"></i></div>
+                    <h4>${d.title || 'Document'}</h4>
+                    <p>${d.category || 'General'}</p>
+                    <a href="${d.fileUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-navy btn-sm" style="margin-top:12px;"><i class="fas fa-download"></i> Download</a>
+                </div>`;
+            }).join('');
+            initScrollAnimations();
+        })
+        .catch(err => console.error('Documents fetch error:', err));
+}
+
+function loadContactFromFirestore() {
+    db.collection('settings').doc('contact').get()
+        .then((doc) => {
+            if (!doc.exists) return;
+            const d = doc.data();
+            const email = d.email || SITE_CONFIG.email;
+            const wa = (d.whatsapp || SITE_CONFIG.whatsapp).replace(/[^0-9]/g, '');
+            const phone = d.phone || '+91 88877 93275';
+            const address = d.address || SITE_CONFIG.location;
+
+            document.querySelectorAll('#cfgEmail1, #cfgFooterEmail').forEach(el => el.textContent = email);
+            document.querySelectorAll('#cfgAddress1').forEach(el => el.textContent = address);
+            document.querySelectorAll('#cfgEmailLink').forEach(el => { el.href = 'mailto:' + email; el.textContent = email; });
+            document.querySelectorAll('#cfgTelLink').forEach(el => { el.href = 'tel:' + phone.replace(/\s/g,''); el.textContent = phone; });
+            document.querySelectorAll('#cfgWaLink, #cfgFooterWa, #cfgWhatsApp1').forEach(el => {
+                el.href = 'https://wa.me/' + wa;
+                el.textContent = phone;
+            });
+            const floatBtn = document.getElementById('floatingWaBtn');
+            if (floatBtn) floatBtn.href = `https://wa.me/${wa}?text=${encodeURIComponent('Hello ' + (d.collegeName||'KIT College') + ', I would like to enquire about admissions.')}`;
+
+            SITE_CONFIG.whatsapp = wa;
+        })
+        .catch(err => console.error('Contact fetch error:', err));
+}
             function loadNoticesFromFirestore() {
                 db.collection('notices')
                     .where('status', '==', 'Published')
@@ -2660,7 +2843,20 @@ target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="
                     })
                     .catch(err => console.error('Notices fetch error:', err));
             }
-
+function loadHomepageFromFirestore() {
+    db.collection('settings').doc('homepage').get()
+        .then((doc) => {
+            if (!doc.exists) return;
+            const d = doc.data();
+            if (d.heroHeading) document.querySelector('.hero-title').childNodes[0].textContent = d.heroHeading;
+            if (d.heroSubtitle) document.querySelector('.hero-title .gold-text').textContent = d.heroSubtitle;
+            if (d.heroImage) document.getElementById('heroBg').style.backgroundImage = `url('${cloudinaryUrl(d.heroImage,1920,1080,'fill')}')`;
+            if (d.aboutHeading) document.querySelector('#about .section-title').textContent = d.aboutHeading;
+            if (d.aboutDesc) document.querySelector('#about .about-text').textContent = d.aboutDesc;
+            if (d.aboutImage) document.getElementById('aboutImg').src = cloudinaryUrl(d.aboutImage,800,480,'fill');
+        })
+        .catch(err => console.error('Homepage fetch error:', err));
+}
             /* ================================================================
                DOM READY
                ================================================================ */
@@ -2675,7 +2871,7 @@ target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="
                 window.addEventListener('load', () => { setTimeout(hideLoader, 600); });
                 setTimeout(hideLoader, 3000);
 
-                // ---- HERO BACKGROUND (via Cloudinary) ----
+ // ---- HERO BACKGROUND (via Cloudinary) ----
                 const heroBg = document.getElementById('heroBg');
                 if (SITE_CONFIG.heroImage) {
                     heroBg.style.backgroundImage = `url('${cloudinaryUrl(SITE_CONFIG.heroImage, 1920, 1080, 'fill')}')`;
@@ -2683,8 +2879,8 @@ target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="
                     heroBg.style.backgroundImage =
                         `url('${cloudinaryUrl('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80', 1920, 1080, 'fill')}')`;
                 }
-
                 // ---- ABOUT IMAGE (via Cloudinary) ----
+                
                 const aboutImg = document.getElementById('aboutImg');
                 const aboutSource =
                 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1000&q=80';
@@ -2695,10 +2891,17 @@ target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="
 // ---- GALLERY ----
                 renderGallery(SITE_CONFIG.campusImages);
                 loadGalleryFromFirestore();
+loadNoticesFromFirestore();
+loadCoursesFromFirestore();
+loadFacilitiesFromFirestore();
+loadFacultyFromFirestore();
+loadEventsFromFirestore();
+loadHomepageFromFirestore();
+loadContactFromFirestore();
+                
 
                 // ---- NOTICES ----
                 renderNotices(SITE_CONFIG.notices);
-                loadNoticesFromFirestore();
                 
                 // ---- NAVIGATION ----
                 initNavigation();
