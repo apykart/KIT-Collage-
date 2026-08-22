@@ -2628,6 +2628,40 @@ target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="
             }
 
             /* ================================================================
+               FIRESTORE SYNC — pulls admin-added gallery images & notices
+               ================================================================ */
+            function loadGalleryFromFirestore() {
+                db.collection('gallery').orderBy('order', 'asc').get()
+                    .then((snapshot) => {
+                        if (snapshot.empty) return;
+                        const firestoreImages = snapshot.docs.map(doc => {
+                            const d = doc.data();
+                            return {
+                                url: d.imageUrl,
+                                category: d.category || 'Campus',
+                                caption: d.title || d.caption || 'KIT College'
+                            };
+                        });
+                        SITE_CONFIG.campusImages = firestoreImages.concat(SITE_CONFIG.campusImages);
+                        renderGallery(SITE_CONFIG.campusImages);
+                    })
+                    .catch(err => console.error('Gallery fetch error:', err));
+            }
+
+            function loadNoticesFromFirestore() {
+                db.collection('notices')
+                    .where('status', '==', 'Published')
+                    .orderBy('date', 'desc')
+                    .get()
+                    .then((snapshot) => {
+                        if (snapshot.empty) return;
+                        const notices = snapshot.docs.map(doc => doc.data());
+                        renderNotices(notices);
+                    })
+                    .catch(err => console.error('Notices fetch error:', err));
+            }
+
+            /* ================================================================
                DOM READY
                ================================================================ */
             document.addEventListener('DOMContentLoaded', function() {
@@ -2657,12 +2691,15 @@ target="_blank" rel="noopener noreferrer" class="floating-whatsapp" aria-label="
                 aboutImg.src = cloudinaryUrl(aboutSource, 800, 480, 'fill');
                 aboutImg.alt = 'KIT College campus building';
 
-                // ---- GALLERY ----
+
+// ---- GALLERY ----
                 renderGallery(SITE_CONFIG.campusImages);
+                loadGalleryFromFirestore();
 
                 // ---- NOTICES ----
                 renderNotices(SITE_CONFIG.notices);
-
+                loadNoticesFromFirestore();
+                
                 // ---- NAVIGATION ----
                 initNavigation();
 
