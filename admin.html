@@ -2235,29 +2235,33 @@
         // ================================================================
         // UPLOAD HELPER — Firebase Storage
         // ================================================================
-        async function uploadFileToStorage(file, path, onProgress) {
-            return new Promise((resolve, reject) => {
-                const ref = storage.ref(path);
-                const task = ref.put(file);
-                task.on('state_changed',
-                    (snap) => {
-                        if (onProgress) {
-                            const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
-                            onProgress(pct);
-                        }
-                    },
-                    (err) => reject(err),
-                    async () => {
-                        try {
-                            const url = await ref.getDownloadURL();
-                            resolve(url);
-                        } catch (err) {
-                            reject(err);
-                        }
-                    }
-                );
-            });
-        }
+        const CLOUDINARY_CLOUD_NAME = 'dxbtigfne';
+const CLOUDINARY_UPLOAD_PRESET = 'kit_collage_uploads';
+
+async function uploadFileToStorage(file, folder, onProgress, resourceType = 'image') {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('folder', folder);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`);
+
+        xhr.upload.onprogress = (e) => {
+            if (onProgress && e.lengthComputable) onProgress((e.loaded / e.total) * 100);
+        };
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(JSON.parse(xhr.responseText).secure_url);
+            } else {
+                reject(new Error('Cloudinary upload failed: ' + xhr.responseText));
+            }
+        };
+        xhr.onerror = () => reject(new Error('Network error during upload'));
+        xhr.send(formData);
+    });
+}
 
         // ================================================================
         // DATA LOADING
@@ -2588,10 +2592,9 @@
                         const progressWrap = document.getElementById('galleryUploadProgress');
                         progressWrap.classList.add('show');
                         try {
-                            const path = `gallery/${Date.now()}_${file.name}`;
-                            imageUrl = await uploadFileToStorage(file, path, (pct) => {
-                                progressBar.style.width = pct + '%';
-                            });
+                            imageUrl = await uploadFileToStorage(file, 'gallery', (pct) => {
+    progressBar.style.width = pct + '%';
+}, 'image');
                             progressWrap.classList.remove('show');
                             showToast('Image uploaded successfully', 'success');
                         } catch (err) {
@@ -3346,10 +3349,9 @@
                         const progressBar = document.querySelector('#docUploadProgress .progress-bar');
                         const progressWrap = document.getElementById('docUploadProgress');
                         progressWrap.classList.add('show');
-                        const path = `documents/${Date.now()}_${file.name}`;
-                        fileUrl = await uploadFileToStorage(file, path, (pct) => {
-                            progressBar.style.width = pct + '%';
-                        });
+                        fileUrl = await uploadFileToStorage(file, 'documents', (pct) => {
+    progressBar.style.width = pct + '%';
+}, 'auto');
                         progressWrap.classList.remove('show');
                         showToast('File uploaded', 'success');
                     } catch (err) {
@@ -3567,27 +3569,30 @@
 
         // ---- NOTIFICATIONS ----
         async function loadNotifications() {
-            try {
-                const snap = await db.collection('enquiries').where('status', '==', 'New').orderBy('timestamp', 'desc')
-                    .limit(20).get();
-                allNotifications = [];
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    allNotifications.push({
-                        id: doc.id,
-                        text: `New enquiry from ${d.fullName || 'Unknown'}`,
-                        time: d.timestamp ? new Date(d.timestamp.seconds * 1000) : new Date(),
-                        read: false,
-                        enquiryId: doc.id
-                    });
-                });
-                unreadCount = allNotifications.filter(n => !n.read).length;
-                renderNotifications();
-            } catch (err) {
-                console.error('loadNotifications error:', err);
-            }
-        }
-
+    try {
+        const snap = await db.collection('enquiries').where('status', '==', 'New').get();
+        allNotifications = [];
+        const sortedDocs = snap.docs.slice().sort((a, b) => {
+            const ta = a.data().timestamp ? a.data().timestamp.seconds : 0;
+            const tb = b.data().timestamp ? b.data().timestamp.seconds : 0;
+            return tb - ta;
+        }).slice(0, 20);
+        sortedDocs.forEach(doc => {
+            const d = doc.data();
+            allNotifications.push({
+                id: doc.id,
+                text: `New enquiry from ${d.fullName || 'Unknown'}`,
+                time: d.timestamp ? new Date(d.timestamp.seconds * 1000) : new Date(),
+                read: false,
+                enquiryId: doc.id
+            });
+        });
+        unreadCount = allNotifications.filter(n => !n.read).length;
+        renderNotifications();
+    } catch (err) {
+        console.error('loadNotifications error:', err);
+    }
+}
         function renderNotifications() {
             const list = $('#notifList');
             if (!list) return;
