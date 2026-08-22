@@ -2701,11 +2701,12 @@
             }
             
             function loadCoursesFromFirestore() {
-    db.collection('courses').where('status', '==', 'Active').orderBy('order', 'asc').get()
+    db.collection('courses').where('status', '==', 'Active').get()
         .then((snapshot) => {
             const grid = document.getElementById('academicsGrid');
             if (!grid || snapshot.empty) return;
-            grid.innerHTML = snapshot.docs.map(doc => {
+            const docs = snapshot.docs.slice().sort((a, b) => (a.data().order || 0) - (b.data().order || 0));
+            grid.innerHTML = docs.map(doc => {
                 const d = doc.data();
                 return `<div class="academic-card fade-up">
                     <div class="acad-icon"><i class="fas fa-book-open"></i></div>
@@ -2718,7 +2719,7 @@
         .catch(err => console.error('Courses fetch error:', err));
 }
 function loadFacultyFromFirestore() {
-    db.collection('faculty').where('status', '==', 'Active').orderBy('order', 'asc').get()
+    db.collection('faculty').where('status', '==', 'Active').get()
         .then((snapshot) => {
             const grid = document.getElementById('facultyGrid');
             if (!grid) return;
@@ -2726,7 +2727,8 @@ function loadFacultyFromFirestore() {
                 grid.innerHTML = `<div class="notice-placeholder" style="grid-column:1/-1;"><p><i class="fas fa-info-circle"></i> Faculty details will appear here soon.</p></div>`;
                 return;
             }
-            grid.innerHTML = snapshot.docs.map(doc => {
+            const docs = snapshot.docs.slice().sort((a, b) => (a.data().order || 0) - (b.data().order || 0));
+            grid.innerHTML = docs.map(doc => {
                 const d = doc.data();
                 const photo = d.photo ? cloudinaryUrl(d.photo, 300, 300, 'fill') : '';
                 return `<div class="academic-card fade-up">
@@ -2740,13 +2742,13 @@ function loadFacultyFromFirestore() {
         })
         .catch(err => console.error('Faculty fetch error:', err));
 }
-
 function loadFacilitiesFromFirestore() {
-    db.collection('facilities').where('status', '==', 'Active').orderBy('order', 'asc').get()
+    db.collection('facilities').where('status', '==', 'Active').get()
         .then((snapshot) => {
             const grid = document.querySelector('.campus-grid');
             if (!grid || snapshot.empty) return;
-            grid.innerHTML = snapshot.docs.map(doc => {
+            const docs = snapshot.docs.slice().sort((a, b) => (a.data().order || 0) - (b.data().order || 0));
+            grid.innerHTML = docs.map(doc => {
                 const d = doc.data();
                 return `<div class="campus-facility-card fade-up">
                     <div class="facility-icon"><i class="fas ${d.icon || 'fa-building'}"></i></div>
@@ -2759,8 +2761,8 @@ function loadFacilitiesFromFirestore() {
         .catch(err => console.error('Facilities fetch error:', err));
 }
 
-function loadEventsFromFirestore() {
-    db.collection('events').where('status', '==', 'Upcoming').orderBy('eventDate', 'asc').get()
+ function loadEventsFromFirestore() {
+    db.collection('events').where('status', '==', 'Upcoming').get()
         .then((snapshot) => {
             const grid = document.getElementById('eventsGrid');
             if (!grid) return;
@@ -2768,7 +2770,8 @@ function loadEventsFromFirestore() {
                 grid.innerHTML = `<div class="notice-placeholder" style="grid-column:1/-1;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);"><p><i class="fas fa-info-circle"></i> Upcoming events will be announced here.</p></div>`;
                 return;
             }
-            grid.innerHTML = snapshot.docs.map(doc => {
+            const docs = snapshot.docs.slice().sort((a, b) => (a.data().eventDate || '').localeCompare(b.data().eventDate || ''));
+            grid.innerHTML = docs.map(doc => {
                 const d = doc.data();
                 const dateStr = d.eventDate ? new Date(d.eventDate).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'}) : '';
                 return `<div class="campus-facility-card fade-up">
@@ -2832,17 +2835,18 @@ function loadContactFromFirestore() {
         .catch(err => console.error('Contact fetch error:', err));
 }
             function loadNoticesFromFirestore() {
-                db.collection('notices')
-                    .where('status', '==', 'Published')
-                    .orderBy('date', 'desc')
-                    .get()
-                    .then((snapshot) => {
-                        if (snapshot.empty) return;
-                        const notices = snapshot.docs.map(doc => doc.data());
-                        renderNotices(notices);
-                    })
-                    .catch(err => console.error('Notices fetch error:', err));
-            }
+    db.collection('notices')
+        .where('status', '==', 'Published')
+        .get()
+        .then((snapshot) => {
+            if (snapshot.empty) return;
+            const notices = snapshot.docs
+                .map(doc => doc.data())
+                .sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+            renderNotices(notices);
+        })
+        .catch(err => console.error('Notices fetch error:', err));
+}
 function loadHomepageFromFirestore() {
     db.collection('settings').doc('homepage').get()
         .then((doc) => {
@@ -3435,7 +3439,7 @@ loadContactFromFirestore();
                 cloudinaryUrl,
                 firebase,
                 db,
-                analytics,
+                analytics, 
                 CLOUDINARY_CLOUD_NAME
             };
         </script>
