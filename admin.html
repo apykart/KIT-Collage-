@@ -4,14 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KIT College — Admin Panel</title>
-
-    <!-- ===== FONTS & FONTAWESOME ===== -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- ===== FIREBASE (v9 compat) ===== -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js">
     </script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js">
@@ -24,27 +21,23 @@
     </script>
 
     <style>
-        /* ================================================================
-               ADMIN PANEL — KIT COLLEGE
-               Brand: Navy #0B1F3A | Secondary #163D68 | Accent #C9A227
-               ================================================================ */
+        /* ===== ROOT VARIABLES ===== */
         :root {
             --navy: #0B1F3A;
-            --navy-light: #163D68;
+            --navy-light: #1a365d;
             --navy-glass: rgba(11, 31, 58, 0.95);
             --gold: #C9A227;
             --gold-light: #dbb53a;
             --gold-dark: #a8871e;
             --white: #FFFFFF;
-            --off-white: #F5F7FA;
-            --gray-100: #f0f2f5;
+            --off-white: #f0f2f6;
+            --gray-100: #f0f2f6;
             --gray-200: #e2e6ec;
             --gray-300: #c5ccd6;
             --gray-400: #9aa3b0;
             --gray-500: #6b7a8a;
             --text-dark: #172033;
             --text-muted: #6b7a8a;
-            --text-light: #f0f2f5;
             --success: #28a745;
             --success-bg: #d4edda;
             --danger: #dc3545;
@@ -120,8 +113,8 @@
 
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
             background: var(--gray-100);
@@ -134,7 +127,7 @@
             background: var(--gray-400);
         }
 
-        /* ===== LOADING OVERLAY ===== */
+        /* ===== LOADER ===== */
         #appLoader {
             position: fixed;
             top: 0;
@@ -147,11 +140,10 @@
             align-items: center;
             justify-content: center;
             z-index: 999999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            transition: opacity 0.5s ease;
         }
         #appLoader.hidden {
             opacity: 0;
-            visibility: hidden;
             pointer-events: none;
         }
         #appLoader .loader-logo {
@@ -179,9 +171,7 @@
             }
         }
 
-        /* ================================================================
-           LOGIN SCREEN
-           ================================================================ */
+        /* ===== LOGIN ===== */
         #loginScreen {
             display: none;
             position: fixed;
@@ -202,7 +192,7 @@
             background: var(--white);
             border-radius: var(--radius);
             padding: 48px 40px;
-            max-width: 420px;
+            max-width: 400px;
             width: 100%;
             box-shadow: var(--shadow-lg);
             animation: fadeUp 0.5s ease;
@@ -325,9 +315,7 @@
             color: var(--gold);
         }
 
-        /* ================================================================
-           ADMIN LAYOUT
-           ================================================================ */
+        /* ===== ADMIN LAYOUT ===== */
         #adminApp {
             display: none;
             width: 100%;
@@ -338,7 +326,7 @@
             display: flex;
         }
 
-        /* ---- SIDEBAR ---- */
+        /* ===== SIDEBAR ===== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -353,15 +341,16 @@
             transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             overflow-y: auto;
             overflow-x: hidden;
-            padding-bottom: 20px;
+            padding-bottom: 16px;
         }
         .sidebar .sidebar-brand {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 18px 20px 14px 20px;
+            padding: 16px 20px 12px 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             min-height: var(--header-height);
+            flex-shrink: 0;
         }
         .sidebar .sidebar-brand .brand-icon {
             width: 38px;
@@ -417,7 +406,7 @@
             font-size: 0.9rem;
             transition: var(--transition);
             cursor: pointer;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             position: relative;
         }
         .sidebar .sidebar-nav .nav-item:hover {
@@ -432,8 +421,8 @@
             content: '';
             position: absolute;
             left: 0;
-            top: 8px;
-            bottom: 8px;
+            top: 6px;
+            bottom: 6px;
             width: 3px;
             background: var(--gold);
             border-radius: 0 3px 3px 0;
@@ -459,6 +448,7 @@
             padding: 12px 16px;
             border-top: 1px solid rgba(255, 255, 255, 0.06);
             margin-top: auto;
+            flex-shrink: 0;
         }
         .sidebar .sidebar-footer .nav-item {
             color: rgba(255, 255, 255, 0.5);
@@ -469,7 +459,6 @@
             background: rgba(220, 53, 69, 0.1);
         }
 
-        /* ---- SIDEBAR MOBILE OVERLAY ---- */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -487,7 +476,7 @@
             opacity: 1;
         }
 
-        /* ---- MAIN CONTENT ---- */
+        /* ===== MAIN CONTENT ===== */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -507,6 +496,7 @@
             justify-content: space-between;
             border-bottom: 1px solid var(--gray-200);
             box-shadow: var(--shadow-sm);
+            flex-shrink: 0;
         }
         .main-content .topbar .topbar-left {
             display: flex;
@@ -604,7 +594,6 @@
             color: var(--navy);
         }
 
-        /* ---- PAGE CONTENT ---- */
         .page-content {
             flex: 1;
             padding: 28px;
@@ -620,12 +609,10 @@
             display: block;
         }
 
-        /* ================================================================
-           CARDS & STATS
-           ================================================================ */
+        /* ===== STATS ===== */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
             gap: 18px;
             margin-bottom: 28px;
         }
@@ -707,9 +694,7 @@
             color: var(--info);
         }
 
-        /* ================================================================
-           TABLES
-           ================================================================ */
+        /* ===== TABLES ===== */
         .table-wrap {
             background: var(--white);
             border-radius: var(--radius);
@@ -718,12 +703,12 @@
             overflow: hidden;
         }
         .table-wrap .table-header {
-            padding: 16px 20px;
+            padding: 14px 20px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 10px;
             border-bottom: 1px solid var(--gray-200);
             background: var(--gray-100);
         }
@@ -731,14 +716,14 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .table-wrap .table-header .th-left .search-input {
             padding: 8px 14px;
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-sm);
             font-size: 0.85rem;
-            min-width: 180px;
+            min-width: 170px;
             background: var(--white);
             transition: var(--transition);
         }
@@ -756,7 +741,7 @@
         .table-wrap .table-header .th-right {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
         .table-wrap .table-scroll {
             overflow-x: auto;
@@ -772,10 +757,10 @@
             border-bottom: 2px solid var(--gray-200);
         }
         .table-wrap table thead th {
-            padding: 12px 16px;
+            padding: 10px 14px;
             text-align: left;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-muted);
@@ -785,7 +770,7 @@
             background: var(--gray-100);
         }
         .table-wrap table tbody td {
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-bottom: 1px solid var(--gray-100);
             vertical-align: middle;
         }
@@ -795,24 +780,8 @@
         .table-wrap table tbody tr:last-child td {
             border-bottom: none;
         }
-        .table-wrap .empty-state {
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--text-muted);
-        }
-        .table-wrap .empty-state i {
-            font-size: 2.5rem;
-            color: var(--gray-300);
-            margin-bottom: 12px;
-            display: block;
-        }
-        .table-wrap .empty-state .btn {
-            margin-top: 12px;
-        }
 
-        /* ================================================================
-           BUTTONS
-           ================================================================ */
+        /* ===== BUTTONS ===== */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -878,7 +847,7 @@
             font-size: 0.75rem;
         }
         .btn-xs {
-            padding: 4px 10px;
+            padding: 3px 10px;
             font-size: 0.7rem;
         }
         .btn-icon {
@@ -891,9 +860,7 @@
             justify-content: center;
         }
 
-        /* ================================================================
-           FORMS
-           ================================================================ */
+        /* ===== FORMS ===== */
         .form-card {
             background: var(--white);
             border-radius: var(--radius);
@@ -903,15 +870,15 @@
             max-width: 800px;
         }
         .form-card .form-title {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: var(--navy);
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
             border-bottom: 2px solid var(--gray-200);
         }
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
         .form-group label {
             display: block;
@@ -942,7 +909,7 @@
             box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.1);
         }
         .form-group textarea {
-            min-height: 100px;
+            min-height: 90px;
             resize: vertical;
         }
         .form-group .form-help {
@@ -953,7 +920,7 @@
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 18px;
+            gap: 16px;
         }
         @media (max-width: 600px) {
             .form-row {
@@ -961,9 +928,7 @@
             }
         }
 
-        /* ================================================================
-           TOASTS
-           ================================================================ */
+        /* ===== TOASTS ===== */
         #toastContainer {
             position: fixed;
             top: 20px;
@@ -1044,9 +1009,7 @@
             }
         }
 
-        /* ================================================================
-           MODAL
-           ================================================================ */
+        /* ===== MODAL ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1071,7 +1034,7 @@
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            padding: 32px;
+            padding: 28px 32px;
             animation: modalIn 0.3s ease;
             box-shadow: var(--shadow-lg);
         }
@@ -1089,8 +1052,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
             border-bottom: 2px solid var(--gray-200);
         }
         .modal-box .modal-header h3 {
@@ -1111,7 +1074,7 @@
             color: var(--danger);
         }
         .modal-box .modal-body {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .modal-box .modal-footer {
             display: flex;
@@ -1124,9 +1087,7 @@
             min-width: 80px;
         }
 
-        /* ================================================================
-           SEARCH MODAL
-           ================================================================ */
+        /* ===== SEARCH MODAL ===== */
         #searchModal .modal-box {
             max-width: 640px;
         }
@@ -1188,9 +1149,7 @@
             padding: 30px 0;
         }
 
-        /* ================================================================
-           NOTIFICATION DROPDOWN
-           ================================================================ */
+        /* ===== NOTIFICATION DROPDOWN ===== */
         .notif-dropdown {
             position: absolute;
             top: 56px;
@@ -1268,52 +1227,7 @@
             position: relative;
         }
 
-        /* ================================================================
-           UTILITY
-           ================================================================ */
-        .flex {
-            display: flex;
-        }
-        .flex-center {
-            align-items: center;
-            justify-content: center;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .gap-12 {
-            gap: 12px;
-        }
-        .gap-16 {
-            gap: 16px;
-        }
-        .flex-wrap {
-            flex-wrap: wrap;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .mt-24 {
-            margin-top: 24px;
-        }
-        .mb-16 {
-            margin-bottom: 16px;
-        }
-        .w-full {
-            width: 100%;
-        }
-        .text-muted {
-            color: var(--text-muted);
-        }
-        .text-center {
-            text-align: center;
-        }
-        .text-right {
-            text-align: right;
-        }
+        /* ===== UTILITY ===== */
         .badge {
             display: inline-block;
             padding: 2px 12px;
@@ -1363,18 +1277,143 @@
             background: var(--success-bg);
             color: var(--success);
         }
-        .badge-closed {
-            background: var(--gray-200);
-            color: var(--text-muted);
-        }
         .badge-coming {
             background: var(--warning-bg);
             color: #856404;
         }
 
-        /* ================================================================
-           RESPONSIVE
-           ================================================================ */
+        .spinner-sm {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--gray-300);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        .loading-placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .loading-placeholder .spinner-sm {
+            width: 30px;
+            height: 30px;
+            border-width: 3px;
+            display: block;
+            margin: 0 auto 12px;
+        }
+        .empty-state-inline {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .empty-state-inline i {
+            font-size: 2.5rem;
+            color: var(--gray-300);
+            display: block;
+            margin-bottom: 12px;
+        }
+        .empty-state-inline .btn {
+            margin-top: 12px;
+        }
+
+        .image-preview {
+            display: none;
+            margin-top: 10px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            max-width: 200px;
+            border: 2px solid var(--gray-200);
+            position: relative;
+        }
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            max-height: 150px;
+            object-fit: cover;
+        }
+        .image-preview .remove-preview {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .image-preview .remove-preview:hover {
+            background: var(--danger);
+        }
+        .image-preview.show {
+            display: block;
+        }
+
+        .upload-progress {
+            display: none;
+            margin-top: 8px;
+            height: 6px;
+            background: var(--gray-200);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .upload-progress .progress-bar {
+            height: 100%;
+            background: var(--gold);
+            width: 0%;
+            transition: width 0.2s ease;
+            border-radius: 10px;
+        }
+        .upload-progress.show {
+            display: block;
+        }
+
+        .flex {
+            display: flex;
+        }
+        .flex-center {
+            align-items: center;
+            justify-content: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .gap-16 {
+            gap: 16px;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mt-24 {
+            margin-top: 24px;
+        }
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -1488,127 +1527,21 @@
                 font-size: 0.9rem;
             }
         }
-
-        /* ---- Loading spinner inline ---- */
-        .spinner-sm {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid var(--gray-300);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-        .loading-placeholder {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
-        .loading-placeholder .spinner-sm {
-            width: 30px;
-            height: 30px;
-            border-width: 3px;
-            display: block;
-            margin: 0 auto 12px;
-        }
-
-        /* ---- Image preview in forms ---- */
-        .image-preview {
-            display: none;
-            margin-top: 10px;
-            border-radius: var(--radius-sm);
-            overflow: hidden;
-            max-width: 200px;
-            border: 2px solid var(--gray-200);
-            position: relative;
-        }
-        .image-preview img {
-            width: 100%;
-            height: auto;
-            max-height: 150px;
-            object-fit: cover;
-        }
-        .image-preview .remove-preview {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: rgba(0, 0, 0, 0.6);
-            color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .image-preview .remove-preview:hover {
-            background: var(--danger);
-        }
-        .image-preview.show {
-            display: block;
-        }
-
-        /* ---- Upload progress ---- */
-        .upload-progress {
-            display: none;
-            margin-top: 8px;
-            height: 6px;
-            background: var(--gray-200);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .upload-progress .progress-bar {
-            height: 100%;
-            background: var(--gold);
-            width: 0%;
-            transition: width 0.2s ease;
-            border-radius: 10px;
-        }
-        .upload-progress.show {
-            display: block;
-        }
-
-        /* ================================================================
-           EMPTY STATE (inside tables)
-           ================================================================ */
-        .empty-state-inline {
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--text-muted);
-        }
-        .empty-state-inline i {
-            font-size: 2.5rem;
-            color: var(--gray-300);
-            display: block;
-            margin-bottom: 12px;
-        }
-        .empty-state-inline .btn {
-            margin-top: 12px;
-        }
     </style>
 </head>
 <body>
 
-    <!-- ============================================================
-    APP LOADER
-    ============================================================ -->
+    <!-- ===== LOADER ===== -->
     <div id="appLoader">
         <div class="loader-logo">KIT<span> COLLEGE</span></div>
         <div class="loader-spinner"></div>
         <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:12px;">Loading Admin Panel...</p>
     </div>
 
-    <!-- ============================================================
-    TOAST CONTAINER
-    ============================================================ -->
+    <!-- ===== TOASTS ===== -->
     <div id="toastContainer"></div>
 
-    <!-- ============================================================
-    LOGIN SCREEN
-    ============================================================ -->
+    <!-- ===== LOGIN ===== -->
     <div id="loginScreen">
         <div class="login-box">
             <div class="login-brand">
@@ -1616,7 +1549,7 @@
                 <p>Administration Portal</p>
             </div>
             <div class="login-error" id="loginError">Invalid email or password.</div>
-            <form id="loginForm" autocomplete="off">
+            <form id="loginForm">
                 <div class="form-group">
                     <label for="loginEmail">Email</label>
                     <input type="email" id="loginEmail" placeholder="admin@kitcollege.com" required autocomplete="email" />
@@ -1624,7 +1557,7 @@
                 <div class="form-group">
                     <label for="loginPassword">Password</label>
                     <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
-                    <span class="toggle-pw" id="togglePw" role="button" aria-label="Toggle password visibility"><i class="fas fa-eye"></i></span>
+                    <span class="toggle-pw" id="togglePw"><i class="fas fa-eye"></i></span>
                 </div>
                 <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
             </form>
@@ -1634,19 +1567,14 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    ADMIN APP
-    ============================================================ -->
+    <!-- ===== ADMIN APP ===== -->
     <div id="adminApp">
 
         <!-- SIDEBAR -->
-        <aside class="sidebar" id="sidebar" role="navigation" aria-label="Admin navigation">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
-                <div class="brand-text">
-                    KIT<span> COLLEGE</span>
-                    <span class="brand-sub">Admin Panel</span>
-                </div>
+                <div class="brand-text">KIT<span> COLLEGE</span><span class="brand-sub">Admin Panel</span></div>
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-label">Main</div>
@@ -1670,47 +1598,32 @@
             </div>
         </aside>
 
-        <!-- SIDEBAR OVERLAY (mobile) -->
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-        <!-- MAIN CONTENT -->
+        <!-- MAIN -->
         <main class="main-content">
 
-            <!-- TOPBAR -->
             <header class="topbar">
                 <div class="topbar-left">
-                    <span class="menu-toggle" id="menuToggle" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></span>
+                    <span class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></span>
                     <span class="page-title" id="pageTitle">Dashboard</span>
                 </div>
                 <div class="topbar-right">
-                    <button class="search-trigger" id="searchTrigger" aria-label="Search">
-                        <i class="fas fa-search"></i>
-                        <span>Search</span>
-                        <kbd>Ctrl+K</kbd>
-                    </button>
+                    <button class="search-trigger" id="searchTrigger"><i class="fas fa-search"></i><span>Search</span><kbd>Ctrl+K</kbd></button>
                     <div style="position:relative;">
-                        <button class="notif-btn" id="notifBtn" aria-label="Notifications">
-                            <i class="fas fa-bell"></i>
-                            <span class="notif-dot hidden" id="notifDot"></span>
-                        </button>
+                        <button class="notif-btn" id="notifBtn"><i class="fas fa-bell"></i><span class="notif-dot hidden" id="notifDot"></span></button>
                         <div class="notif-dropdown" id="notifDropdown">
-                            <div class="notif-head">
-                                <span>Notifications</span>
-                                <button id="markAllRead">Mark all read</button>
-                            </div>
-                            <div id="notifList">
-                                <div class="notif-empty">No notifications</div>
-                            </div>
+                            <div class="notif-head"><span>Notifications</span><button id="markAllRead">Mark all read</button></div>
+                            <div id="notifList"><div class="notif-empty">No notifications</div></div>
                         </div>
                     </div>
-                    <div class="user-avatar" id="userAvatar" title="Admin">A</div>
+                    <div class="user-avatar" id="userAvatar">A</div>
                 </div>
             </header>
 
-            <!-- PAGE CONTENT -->
             <div class="page-content" id="pageContent">
 
-                <!-- ===== DASHBOARD ===== -->
+                <!-- DASHBOARD -->
                 <section class="page-section active" id="view-dashboard">
                     <div class="stats-grid" id="statsGrid">
                         <div class="stat-card"><div class="stat-top"><div class="stat-icon blue"><i class="fas fa-inbox"></i></div></div><div class="stat-number" id="statEnquiries">0</div><div class="stat-label">Total Enquiries</div><span class="stat-trend neutral">—</span></div>
@@ -1720,7 +1633,6 @@
                         <div class="stat-card"><div class="stat-top"><div class="stat-icon orange"><i class="fas fa-book-open"></i></div></div><div class="stat-number" id="statCourses">0</div><div class="stat-label">Courses</div><span class="stat-trend neutral">—</span></div>
                         <div class="stat-card"><div class="stat-top"><div class="stat-icon teal"><i class="fas fa-chalkboard-teacher"></i></div></div><div class="stat-number" id="statFaculty">0</div><div class="stat-label">Faculty</div><span class="stat-trend neutral">—</span></div>
                     </div>
-
                     <h3 style="font-weight:700;color:var(--navy);margin-bottom:12px;">Recent Enquiries</h3>
                     <div class="table-wrap">
                         <div class="table-scroll" id="recentEnquiriesWrap">
@@ -1729,7 +1641,7 @@
                     </div>
                 </section>
 
-                <!-- ===== ENQUIRIES ===== -->
+                <!-- ENQUIRIES -->
                 <section class="page-section" id="view-enquiries">
                     <div class="table-wrap">
                         <div class="table-header">
@@ -1754,7 +1666,7 @@
                     </div>
                 </section>
 
-                <!-- ===== GALLERY ===== -->
+                <!-- GALLERY -->
                 <section class="page-section" id="view-gallery">
                     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;justify-content:space-between;">
                         <h3 style="font-weight:700;color:var(--navy);">Gallery Management</h3>
@@ -1780,7 +1692,7 @@
                     </div>
                 </section>
 
-                <!-- ===== NOTICES ===== -->
+                <!-- NOTICES -->
                 <section class="page-section" id="view-notices">
                     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;justify-content:space-between;">
                         <h3 style="font-weight:700;color:var(--navy);">Notices</h3>
@@ -1802,7 +1714,7 @@
                     </div>
                 </section>
 
-                <!-- ===== EVENTS ===== -->
+                <!-- EVENTS -->
                 <section class="page-section" id="view-events">
                     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;justify-content:space-between;">
                         <h3 style="font-weight:700;color:var(--navy);">Events</h3>
@@ -1825,7 +1737,7 @@
                     </div>
                 </section>
 
-                <!-- ===== COURSES ===== -->
+                <!-- COURSES -->
                 <section class="page-section" id="view-courses">
                     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;justify-content:space-between;">
                         <h3 style="font-weight:700;color:var(--navy);">Courses</h3>
@@ -1848,7 +1760,7 @@
                     </div>
                 </section>
 
-                <!-- ===== FACULTY ===== -->
+                <!-- FACULTY -->
                 <section class="page-section" id="view-faculty">
                     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;justify-content:space-between;">
                         <h3 style="font-weight:700;color:var(--navy);">Faculty</h3>
@@ -1861,7 +1773,7 @@
                     </div>
                 </section>
 
-                <!-- ===== FACILITIES ===== -->
+                <!-- FACILITIES -->
                 <section class="page-section" id="view-facilities">
                     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;justify-content:space-between;">
                         <h3 style="font-weight:700;color:var(--navy);">Facilities</h3>
@@ -1874,7 +1786,7 @@
                     </div>
                 </section>
 
-                <!-- ===== DOCUMENTS ===== -->
+                <!-- DOCUMENTS -->
                 <section class="page-section" id="view-documents">
                     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;align-items:center;justify-content:space-between;">
                         <h3 style="font-weight:700;color:var(--navy);">Documents</h3>
@@ -1887,7 +1799,7 @@
                     </div>
                 </section>
 
-                <!-- ===== HOMEPAGE ===== -->
+                <!-- HOMEPAGE -->
                 <section class="page-section" id="view-homepage">
                     <h3 style="font-weight:700;color:var(--navy);margin-bottom:20px;">Homepage Content</h3>
                     <div class="form-card">
@@ -1905,7 +1817,7 @@
                     </div>
                 </section>
 
-                <!-- ===== CONTACT ===== -->
+                <!-- CONTACT -->
                 <section class="page-section" id="view-contact">
                     <h3 style="font-weight:700;color:var(--navy);margin-bottom:20px;">Contact Settings</h3>
                     <div class="form-card">
@@ -1926,7 +1838,7 @@
                     </div>
                 </section>
 
-                <!-- ===== SEO ===== -->
+                <!-- SEO -->
                 <section class="page-section" id="view-seo">
                     <h3 style="font-weight:700;color:var(--navy);margin-bottom:20px;">SEO Settings</h3>
                     <div class="form-card">
@@ -1944,7 +1856,7 @@
                     </div>
                 </section>
 
-                <!-- ===== SETTINGS ===== -->
+                <!-- SETTINGS -->
                 <section class="page-section" id="view-settings">
                     <h3 style="font-weight:700;color:var(--navy);margin-bottom:20px;">Admin Settings</h3>
                     <div class="form-card">
@@ -1962,22 +1874,18 @@
                     </div>
                 </section>
 
-            </div><!-- /page-content -->
+            </div>
         </main>
-    </div><!-- /adminApp -->
+    </div>
 
-    <!-- ============================================================
-    MODAL CONTAINER
-    ============================================================ -->
+    <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box" id="modalBox">
             <div class="modal-header">
                 <h3 id="modalTitle">Modal</h3>
                 <span class="modal-close" id="modalClose"><i class="fas fa-times"></i></span>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- dynamic content -->
-            </div>
+            <div class="modal-body" id="modalBody"></div>
             <div class="modal-footer" id="modalFooter">
                 <button class="btn btn-outline" id="modalCancel">Cancel</button>
                 <button class="btn btn-primary" id="modalConfirm">Confirm</button>
@@ -1985,9 +1893,7 @@
         </div>
     </div>
 
-    <!-- ============================================================
-    SEARCH MODAL
-    ============================================================ -->
+    <!-- ===== SEARCH MODAL ===== -->
     <div class="modal-overlay" id="searchModal">
         <div class="modal-box" style="max-width:640px;">
             <div class="modal-header">
@@ -2006,13 +1912,12 @@
         </div>
     </div>
 
-
-    <!-- ============================================================
-    JAVASCRIPT — COMPLETE ADMIN LOGIC
-    ============================================================ -->
+    <!-- ================================================================
+    JAVASCRIPT — COMPLETE FUNCTIONAL ADMIN
+    ================================================================ -->
     <script>
         /* ================================================================
-               FIREBASE CONFIG — Insert real credentials here
+               FIREBASE CONFIG — Replace with your own credentials
                ================================================================ */
         const FIREBASE_CONFIG = {
             apiKey: "AIzaSyD4V1Xt4M2eguBGCeTREPHcLWegRUEZrj4",
@@ -2033,35 +1938,6 @@
         const storage = firebase.storage();
         const analytics = firebase.analytics();
 
-        // ---- CLOUDINARY (images only) ----
-        const CLOUDINARY_CLOUD_NAME = "dxbtigfne";
-        const CLOUDINARY_UPLOAD_PRESET = "nwigmmqr";
-        const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
-
-        async function uploadImageToCloudinary(file, onProgress) {
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', CLOUDINARY_UPLOAD_URL, true);
-                xhr.upload.onprogress = (e) => {
-                    if (e.lengthComputable && onProgress) onProgress((e.loaded / e.total) * 100);
-                };
-                xhr.onload = () => {
-                    try {
-                        const res = JSON.parse(xhr.responseText);
-                        if (xhr.status >= 200 && xhr.status < 300 && res.secure_url) {
-                            resolve(res.secure_url);
-                        } else {
-                            reject(new Error(res.error?.message || 'Cloudinary upload failed'));
-                        }
-                    } catch (err) { reject(err); }
-                };
-                xhr.onerror = () => reject(new Error('Network error during upload'));
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-                xhr.send(formData);
-            });
-        }
         // ================================================================
         // STATE
         // ================================================================
@@ -2077,6 +1953,7 @@
         let allDocuments = [];
         let allNotifications = [];
         let unreadCount = 0;
+        let uploadInProgress = false;
 
         // ================================================================
         // DOM REFS
@@ -2176,8 +2053,8 @@
                 modalConfirm.style.display = showConfirm ? 'inline-flex' : 'none';
                 modalOverlay.classList.add('open');
                 modalResolve = resolve;
-                // focus trap
-                setTimeout(() => modalConfirm.focus(), 100);
+                setTimeout(() => { const firstInput = modalBody.querySelector('input, select, textarea'); if (firstInput)
+                        firstInput.focus(); }, 100);
             });
         }
 
@@ -2216,20 +2093,17 @@
             loadAllData();
         }
 
-        // Login
         $('#loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = $('#loginEmail').value.trim();
             const password = $('#loginPassword').value;
             const errorEl = $('#loginError');
             const btn = $('#loginBtn');
-
             errorEl.classList.remove('show');
             setLoading(btn, true);
             try {
                 await auth.signInWithEmailAndPassword(email, password);
                 showToast('Welcome back!', 'success');
-                // will be handled by onAuthStateChanged
             } catch (err) {
                 errorEl.textContent = err.message || 'Invalid email or password.';
                 errorEl.classList.add('show');
@@ -2239,7 +2113,6 @@
             }
         });
 
-        // Toggle password visibility
         $('#togglePw').addEventListener('click', () => {
             const inp = $('#loginPassword');
             const icon = $('#togglePw i');
@@ -2252,13 +2125,9 @@
             }
         });
 
-        // Forgot password
         $('#forgotPwLink').addEventListener('click', async () => {
             const email = $('#loginEmail').value.trim();
-            if (!email) {
-                showToast('Please enter your email address first.', 'warning');
-                return;
-            }
+            if (!email) { showToast('Please enter your email address first.', 'warning'); return; }
             try {
                 await auth.sendPasswordResetEmail(email);
                 showToast('Password reset email sent to ' + email, 'success');
@@ -2267,7 +2136,6 @@
             }
         });
 
-        // Logout
         function logout() {
             auth.signOut();
             showLogin();
@@ -2276,7 +2144,6 @@
         $('#logoutBtn').addEventListener('click', logout);
         $('#logoutBtn2').addEventListener('click', logout);
 
-        // Auth state
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
@@ -2284,7 +2151,6 @@
                 $('#setAdminEmail').value = user.email || '';
                 $('#setAdminName').value = user.displayName || '';
                 showAdmin();
-                // Load notifications
                 loadNotifications();
             } else {
                 currentUser = null;
@@ -2298,19 +2164,14 @@
         function navigateTo(view) {
             if (!viewMap[view]) return;
             currentView = view;
-            // Update sidebar
             $$('.sidebar-nav .nav-item').forEach(el => el.classList.remove('active'));
             const navItem = document.querySelector(`.sidebar-nav .nav-item[data-view="${view}"]`);
             if (navItem) navItem.classList.add('active');
-            // Update page title
             pageTitle.textContent = viewMap[view] || 'Dashboard';
-            // Show page section
             $$('.page-section').forEach(el => el.classList.remove('active'));
             const section = document.getElementById(`view-${view}`);
             if (section) section.classList.add('active');
-            // Close mobile sidebar
             closeSidebar();
-            // Load data for view
             switch (view) {
                 case 'dashboard':
                     loadDashboard();
@@ -2353,7 +2214,6 @@
             }
         }
 
-        // Sidebar nav clicks
         $$('.sidebar-nav .nav-item[data-view]').forEach(el => {
             el.addEventListener('click', () => {
                 const view = el.dataset.view;
@@ -2361,7 +2221,6 @@
             });
         });
 
-        // Menu toggle (mobile)
         menuToggle.addEventListener('click', () => {
             sidebar.classList.toggle('open');
             overlay.classList.toggle('open');
@@ -2372,6 +2231,33 @@
             overlay.classList.remove('open');
         }
         overlay.addEventListener('click', closeSidebar);
+
+        // ================================================================
+        // UPLOAD HELPER — Firebase Storage
+        // ================================================================
+        async function uploadFileToStorage(file, path, onProgress) {
+            return new Promise((resolve, reject) => {
+                const ref = storage.ref(path);
+                const task = ref.put(file);
+                task.on('state_changed',
+                    (snap) => {
+                        if (onProgress) {
+                            const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
+                            onProgress(pct);
+                        }
+                    },
+                    (err) => reject(err),
+                    async () => {
+                        try {
+                            const url = await ref.getDownloadURL();
+                            resolve(url);
+                        } catch (err) {
+                            reject(err);
+                        }
+                    }
+                );
+            });
+        }
 
         // ================================================================
         // DATA LOADING
@@ -2395,8 +2281,7 @@
                 const snap = await db.collection('enquiries').orderBy('timestamp', 'desc').get();
                 allEnquiries = [];
                 snap.forEach(doc => {
-                    const d = doc.data();
-                    allEnquiries.push({ id: doc.id, ...d });
+                    allEnquiries.push({ id: doc.id, ...doc.data() });
                 });
                 updateEnquiryBadge();
                 renderEnquiries();
@@ -2412,7 +2297,6 @@
             if (!wrap) return;
             const search = ($('#enqSearch')?.value || '').toLowerCase();
             const filter = $('#enqFilter')?.value || 'all';
-
             let items = allEnquiries;
             if (search) {
                 items = items.filter(e =>
@@ -2425,19 +2309,12 @@
             if (filter !== 'all') {
                 items = items.filter(e => (e.status || 'New') === filter);
             }
-
             if (items.length === 0) {
-                wrap.innerHTML = `
-                        <div class="empty-state-inline">
-                            <i class="fas fa-inbox"></i>
-                            <p>No enquiries found.</p>
-                        </div>`;
+                wrap.innerHTML =
+                    `<div class="empty-state-inline"><i class="fas fa-inbox"></i><p>No enquiries found.</p></div>`;
                 return;
             }
-
-            let html = `<table><thead><tr>
-                    <th>Name</th><th>Phone</th><th>Programme</th><th>Status</th><th>Date</th><th style="text-align:right;">Actions</th>
-                </tr></thead><tbody>`;
+            let html = `<table><thead><tr><th>Name</th><th>Phone</th><th>Programme</th><th>Status</th><th>Date</th><th style="text-align:right;">Actions</th></tr></thead><tbody>`;
             items.forEach(e => {
                 const status = e.status || 'New';
                 const badgeClass = status === 'New' ? 'badge-new' :
@@ -2447,20 +2324,18 @@
                 const date = e.timestamp ? new Date(e.timestamp.seconds * 1000).toLocaleDateString() : '—';
                 const name = e.fullName || '—';
                 const phone = e.phone || '—';
-                const course = e.course || '—';
-                const msg = e.message || '';
                 html += `<tr>
                         <td><strong>${name}</strong></td>
                         <td>${phone}</td>
-                        <td>${course}</td>
+                        <td>${e.course || '—'}</td>
                         <td><span class="badge ${badgeClass}">${status}</span></td>
                         <td>${date}</td>
                         <td style="text-align:right;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
-                            <button class="btn btn-primary btn-xs" onclick="viewEnquiry('${e.id}')"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-primary btn-xs" onclick="window.viewEnquiry('${e.id}')"><i class="fas fa-eye"></i></button>
                             <a href="https://wa.me/${phone.replace(/[^0-9]/g,'')}?text=Hello%20${encodeURIComponent(name)}%2C%20this%20is%20KIT%20College%20regarding%20your%20enquiry." target="_blank" class="btn btn-success btn-xs"><i class="fab fa-whatsapp"></i></a>
                             <a href="tel:${phone}" class="btn btn-primary btn-xs"><i class="fas fa-phone"></i></a>
-                            <a href="mailto:${e.email || ''}" class="btn btn-info btn-xs" style="background:var(--info);color:#fff;"><i class="fas fa-envelope"></i></a>
-                            <button class="btn btn-danger btn-xs" onclick="deleteEnquiry('${e.id}')"><i class="fas fa-trash"></i></button>
+                            ${e.email ? `<a href="mailto:${e.email}" class="btn btn-info btn-xs" style="background:var(--info);color:#fff;"><i class="fas fa-envelope"></i></a>` : ''}
+                            <button class="btn btn-danger btn-xs" onclick="window.deleteEnquiry('${e.id}')"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
             });
@@ -2473,8 +2348,7 @@
             if (!wrap) return;
             const items = allEnquiries.slice(0, 10);
             if (items.length === 0) {
-                wrap.innerHTML =
-                `<div class="empty-state-inline"><i class="fas fa-inbox"></i><p>No enquiries yet.</p></div>`;
+                wrap.innerHTML = `<div class="empty-state-inline"><i class="fas fa-inbox"></i><p>No enquiries yet.</p></div>`;
                 return;
             }
             let html = `<table><thead><tr><th>Name</th><th>Phone</th><th>Programme</th><th>Status</th><th>Date</th><th style="text-align:right;">Action</th></tr></thead><tbody>`;
@@ -2508,14 +2382,12 @@
                 badge.textContent = newEnqs.length;
                 badge.style.display = newEnqs.length > 0 ? 'inline' : 'none';
             }
-            // Also update notification dot
             const dot = $('#notifDot');
             if (dot) {
                 dot.classList.toggle('hidden', newEnqs.length === 0);
             }
         }
 
-        // Enquiry actions (global)
         window.viewEnquiry = function(id) {
             const e = allEnquiries.find(x => x.id === id);
             if (!e) return;
@@ -2541,8 +2413,6 @@
                         <textarea id="enqNoteInput" style="width:100%;padding:8px;border:2px solid var(--gray-200);border-radius:8px;" rows="2"></textarea>
                     </div>
                 `, 'Update', 'Cancel', true);
-            // Override confirm
-            const origConfirm = modalConfirm.onclick;
             modalConfirm.onclick = async () => {
                 const newStatus = document.getElementById('enqStatusSelect')?.value || 'New';
                 const note = document.getElementById('enqNoteInput')?.value || '';
@@ -2562,9 +2432,9 @@
         };
 
         window.deleteEnquiry = async function(id) {
-            const confirm = await openModal('Delete Enquiry', `
-                    <p>Are you sure you want to delete this enquiry? This action cannot be undone.</p>
-                `, 'Delete', 'Cancel', true);
+            const confirm = await openModal('Delete Enquiry',
+                `<p>Are you sure you want to delete this enquiry? This action cannot be undone.</p>`, 'Delete',
+                'Cancel', true);
             if (confirm) {
                 try {
                     await db.collection('enquiries').doc(id).delete();
@@ -2576,16 +2446,11 @@
             }
         };
 
-        // Enquiry search/filter events
         $('#enqSearch')?.addEventListener('input', renderEnquiries);
         $('#enqFilter')?.addEventListener('change', renderEnquiries);
 
-        // Export CSV
         $('#exportEnqBtn')?.addEventListener('click', () => {
-            if (allEnquiries.length === 0) {
-                showToast('No enquiries to export.', 'warning');
-                return;
-            }
+            if (allEnquiries.length === 0) { showToast('No enquiries to export.', 'warning'); return; }
             const headers = ['Name', 'Phone', 'Email', 'Programme', 'Status', 'Date', 'Message'];
             const rows = allEnquiries.map(e => [
                 e.fullName || '',
@@ -2628,14 +2493,12 @@
             const filter = $('#galleryCatFilter')?.value || 'all';
             let items = allGallery;
             if (filter !== 'all') items = items.filter(g => g.category === filter);
-
             if (items.length === 0) {
                 wrap.innerHTML =
-                `<div class="empty-state-inline"><i class="fas fa-images"></i><p>No gallery images. <button class="btn btn-gold btn-sm" id="addGalleryBtn2"><i class="fas fa-plus"></i> Upload</button></p></div>`;
+                    `<div class="empty-state-inline"><i class="fas fa-images"></i><p>No gallery images. <button class="btn btn-gold btn-sm" id="addGalleryBtn2"><i class="fas fa-plus"></i> Upload</button></p></div>`;
                 document.getElementById('addGalleryBtn2')?.addEventListener('click', () => showAddGallery());
                 return;
             }
-
             let html =
                 `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:16px;">`;
             items.forEach(g => {
@@ -2646,24 +2509,23 @@
                             <div style="font-weight:600;font-size:0.9rem;">${g.title || 'Untitled'}</div>
                             <div style="font-size:0.75rem;color:var(--text-muted);">${g.category || 'Uncategorized'}</div>
                             <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
-                                <button class="btn btn-primary btn-xs" onclick="editGallery('${g.id}')"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger btn-xs" onclick="deleteGallery('${g.id}')"><i class="fas fa-trash"></i></button>
+                                <button class="btn btn-primary btn-xs" onclick="window.editGallery('${g.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-xs" onclick="window.deleteGallery('${g.id}')"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                     </div>`;
             });
             html += `</div>`;
             wrap.innerHTML = html;
-            // Re-bind add button if it exists
             const addBtn = wrap.querySelector('#addGalleryBtn2');
             if (addBtn) addBtn.addEventListener('click', () => showAddGallery());
         }
 
         $('#galleryCatFilter')?.addEventListener('change', renderGallery);
-
         $('#addGalleryBtn')?.addEventListener('click', showAddGallery);
 
         async function showAddGallery(editData = null) {
+            if (uploadInProgress) { showToast('Please wait for current upload to finish.', 'warning'); return; }
             const isEdit = !!editData;
             const title = isEdit ? 'Edit Gallery Image' : 'Add Gallery Image';
             const data = isEdit ? editData : { title: '', caption: '', category: 'Campus', imageUrl: '', order: 0 };
@@ -2682,7 +2544,7 @@
                         </select>
                     </div>
                     <div class="form-group"><label>Image URL</label><input id="galleryImageUrl" value="${data.imageUrl||''}" placeholder="https://..." /></div>
-                    <div class="form-group"><label>Or Upload Image</label>
+                    <div class="form-group"><label>Upload Image</label>
                         <input type="file" id="galleryFileInput" accept="image/*" />
                         <div class="upload-progress" id="galleryUploadProgress"><div class="progress-bar"></div></div>
                         <div class="image-preview" id="galleryPreview"><img /><span class="remove-preview"><i class="fas fa-times"></i></span></div>
@@ -2690,7 +2552,6 @@
                     <div class="form-group"><label>Display Order</label><input type="number" id="galleryOrder" value="${data.order||0}" /></div>
                 `, isEdit ? 'Update' : 'Upload', 'Cancel', true);
 
-            // Handle file preview
             const fileInput = document.getElementById('galleryFileInput');
             const preview = document.getElementById('galleryPreview');
             const previewImg = preview?.querySelector('img');
@@ -2712,9 +2573,7 @@
                 });
             }
 
-            // Wait for modal confirm
             return new Promise((resolve) => {
-                const origHandler = modalConfirm.onclick;
                 modalConfirm.onclick = async () => {
                     const titleVal = document.getElementById('galleryTitle')?.value.trim() || 'Untitled';
                     const captionVal = document.getElementById('galleryCaption')?.value.trim() || '';
@@ -2722,24 +2581,28 @@
                     const orderVal = parseInt(document.getElementById('galleryOrder')?.value) || 0;
                     let imageUrl = document.getElementById('galleryImageUrl')?.value.trim() || '';
 
-// Upload image to Cloudinary (images only)
                     const file = document.getElementById('galleryFileInput')?.files[0];
                     if (file) {
+                        uploadInProgress = true;
                         const progressBar = document.querySelector('#galleryUploadProgress .progress-bar');
                         const progressWrap = document.getElementById('galleryUploadProgress');
                         progressWrap.classList.add('show');
                         try {
-                            imageUrl = await uploadImageToCloudinary(file, (pct) => {
+                            const path = `gallery/${Date.now()}_${file.name}`;
+                            imageUrl = await uploadFileToStorage(file, path, (pct) => {
                                 progressBar.style.width = pct + '%';
                             });
                             progressWrap.classList.remove('show');
                             showToast('Image uploaded successfully', 'success');
                         } catch (err) {
                             progressWrap.classList.remove('show');
+                            uploadInProgress = false;
                             showToast('Upload error: ' + err.message, 'error');
                             return;
                         }
+                        uploadInProgress = false;
                     }
+
                     if (!imageUrl && !isEdit) {
                         showToast('Please provide an image URL or upload an image.', 'warning');
                         return;
@@ -2770,14 +2633,6 @@
                         showToast('Error: ' + err.message, 'error');
                     }
                 };
-                // Also handle cancel
-                modalCancel.onclick = () => { closeModal(false);
-                    resolve(false); };
-                modalClose.onclick = () => { closeModal(false);
-                    resolve(false); };
-                // Store resolve
-                const r = resolve;
-                modalConfirm._resolve = r;
             });
         }
 
@@ -2788,9 +2643,9 @@
         };
 
         window.deleteGallery = async function(id) {
-            const confirm = await openModal('Delete Image', `
-                    <p>Are you sure you want to delete this gallery image? This cannot be undone.</p>
-                `, 'Delete', 'Cancel', true);
+            const confirm = await openModal('Delete Image',
+                `<p>Are you sure you want to delete this gallery image? This cannot be undone.</p>`, 'Delete',
+                'Cancel', true);
             if (confirm) {
                 try {
                     await db.collection('gallery').doc(id).delete();
@@ -2823,14 +2678,12 @@
             const filter = $('#noticeStatusFilter')?.value || 'all';
             let items = allNotices;
             if (filter !== 'all') items = items.filter(n => (n.status || 'Draft') === filter);
-
             if (items.length === 0) {
                 wrap.innerHTML =
                     `<div class="empty-state-inline"><i class="fas fa-bullhorn"></i><p>No notices. <button class="btn btn-gold btn-sm" id="addNoticeBtn2"><i class="fas fa-plus"></i> Add</button></p></div>`;
                 document.getElementById('addNoticeBtn2')?.addEventListener('click', () => showAddNotice());
                 return;
             }
-
             let html = `<table><thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead><tbody>`;
             items.forEach(n => {
                 const status = n.status || 'Draft';
@@ -2842,9 +2695,9 @@
                         <td>${date}</td>
                         <td><span class="badge ${badgeCls}">${status}</span></td>
                         <td style="text-align:right;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
-                            <button class="btn btn-primary btn-xs" onclick="editNotice('${n.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-xs" onclick="deleteNotice('${n.id}')"><i class="fas fa-trash"></i></button>
-                            <button class="btn btn-${status==='Published'?'warning':'success'} btn-xs" onclick="toggleNoticeStatus('${n.id}')">
+                            <button class="btn btn-primary btn-xs" onclick="window.editNotice('${n.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-xs" onclick="window.deleteNotice('${n.id}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-${status==='Published'?'warning':'success'} btn-xs" onclick="window.toggleNoticeStatus('${n.id}')">
                                 <i class="fas fa-${status==='Published'?'eye-slash':'eye'}"></i>
                             </button>
                         </td>
@@ -2862,7 +2715,6 @@
         async function showAddNotice(editData = null) {
             const isEdit = !!editData;
             const data = isEdit ? editData : { title: '', description: '', category: 'General', date: '', status: 'Draft' };
-
             await openModal(isEdit ? 'Edit Notice' : 'Add Notice', `
                     <div class="form-group"><label>Title <span class="required">*</span></label><input id="noticeTitle" value="${data.title||''}" placeholder="Notice title" /></div>
                     <div class="form-group"><label>Description</label><textarea id="noticeDesc" rows="3">${data.description||''}</textarea></div>
@@ -2883,35 +2735,30 @@
                         </select>
                     </div>
                 `, isEdit ? 'Update' : 'Add', 'Cancel', true);
-
-            return new Promise((resolve) => {
-                modalConfirm.onclick = async () => {
-                    const title = document.getElementById('noticeTitle')?.value.trim() || 'Untitled';
-                    const desc = document.getElementById('noticeDesc')?.value.trim() || '';
-                    const category = document.getElementById('noticeCategory')?.value || 'General';
-                    const date = document.getElementById('noticeDate')?.value || new Date().toISOString().slice(0, 10);
-                    const status = document.getElementById('noticeStatus')?.value || 'Draft';
-
-                    if (!title) { showToast('Please enter a title.', 'warning'); return; }
-
-                    const payload = { title, description: desc, category, date, status,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-                    try {
-                        if (isEdit) {
-                            await db.collection('notices').doc(editData.id).update(payload);
-                            showToast('Notice updated', 'success');
-                        } else {
-                            payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                            await db.collection('notices').add(payload);
-                            showToast('Notice added', 'success');
-                        }
-                        closeModal(true);
-                        loadNotices();
-                    } catch (err) {
-                        showToast('Error: ' + err.message, 'error');
+            modalConfirm.onclick = async () => {
+                const title = document.getElementById('noticeTitle')?.value.trim() || 'Untitled';
+                const desc = document.getElementById('noticeDesc')?.value.trim() || '';
+                const category = document.getElementById('noticeCategory')?.value || 'General';
+                const date = document.getElementById('noticeDate')?.value || new Date().toISOString().slice(0, 10);
+                const status = document.getElementById('noticeStatus')?.value || 'Draft';
+                if (!title) { showToast('Please enter a title.', 'warning'); return; }
+                const payload = { title, description: desc, category, date, status,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                try {
+                    if (isEdit) {
+                        await db.collection('notices').doc(editData.id).update(payload);
+                        showToast('Notice updated', 'success');
+                    } else {
+                        payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('notices').add(payload);
+                        showToast('Notice added', 'success');
                     }
-                };
-            });
+                    closeModal(true);
+                    loadNotices();
+                } catch (err) {
+                    showToast('Error: ' + err.message, 'error');
+                }
+            };
         }
 
         window.editNotice = async function(id) {
@@ -2921,8 +2768,8 @@
         };
 
         window.deleteNotice = async function(id) {
-            const confirm = await openModal('Delete Notice', `<p>Delete this notice permanently?</p>`, 'Delete', 'Cancel',
-                true);
+            const confirm = await openModal('Delete Notice', `<p>Delete this notice permanently?</p>`, 'Delete',
+                'Cancel', true);
             if (confirm) {
                 try {
                     await db.collection('notices').doc(id).delete();
@@ -2969,14 +2816,12 @@
             const filter = $('#eventStatusFilter')?.value || 'all';
             let items = allEvents;
             if (filter !== 'all') items = items.filter(e => (e.status || 'Upcoming') === filter);
-
             if (items.length === 0) {
                 wrap.innerHTML =
                     `<div class="empty-state-inline"><i class="fas fa-calendar-alt"></i><p>No events. <button class="btn btn-gold btn-sm" id="addEventBtn2"><i class="fas fa-plus"></i> Add</button></p></div>`;
                 document.getElementById('addEventBtn2')?.addEventListener('click', () => showAddEvent());
                 return;
             }
-
             let html = `<table><thead><tr><th>Title</th><th>Date</th><th>Location</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead><tbody>`;
             items.forEach(e => {
                 const status = e.status || 'Upcoming';
@@ -2989,8 +2834,8 @@
                         <td>${e.location || '—'}</td>
                         <td><span class="badge ${badgeCls}">${status}</span></td>
                         <td style="text-align:right;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
-                            <button class="btn btn-primary btn-xs" onclick="editEvent('${e.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-xs" onclick="deleteEvent('${e.id}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-primary btn-xs" onclick="window.editEvent('${e.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-xs" onclick="window.deleteEvent('${e.id}')"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
             });
@@ -3007,7 +2852,6 @@
             const isEdit = !!editData;
             const data = isEdit ? editData : { title: '', description: '', eventDate: '', time: '', location: '',
                 status: 'Upcoming', coverImage: '' };
-
             await openModal(isEdit ? 'Edit Event' : 'Add Event', `
                     <div class="form-group"><label>Title <span class="required">*</span></label><input id="eventTitle" value="${data.title||''}" placeholder="Event title" /></div>
                     <div class="form-group"><label>Description</label><textarea id="eventDesc" rows="2">${data.description||''}</textarea></div>
@@ -3025,37 +2869,32 @@
                         </select>
                     </div>
                 `, isEdit ? 'Update' : 'Add', 'Cancel', true);
-
-            return new Promise((resolve) => {
-                modalConfirm.onclick = async () => {
-                    const title = document.getElementById('eventTitle')?.value.trim() || 'Untitled';
-                    const desc = document.getElementById('eventDesc')?.value.trim() || '';
-                    const eventDate = document.getElementById('eventDate')?.value || '';
-                    const time = document.getElementById('eventTime')?.value || '';
-                    const location = document.getElementById('eventLocation')?.value.trim() || '';
-                    const coverImage = document.getElementById('eventImage')?.value.trim() || '';
-                    const status = document.getElementById('eventStatus')?.value || 'Upcoming';
-
-                    if (!title) { showToast('Please enter a title.', 'warning'); return; }
-
-                    const payload = { title, description: desc, eventDate, time, location, coverImage, status,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-                    try {
-                        if (isEdit) {
-                            await db.collection('events').doc(editData.id).update(payload);
-                            showToast('Event updated', 'success');
-                        } else {
-                            payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                            await db.collection('events').add(payload);
-                            showToast('Event added', 'success');
-                        }
-                        closeModal(true);
-                        loadEvents();
-                    } catch (err) {
-                        showToast('Error: ' + err.message, 'error');
+            modalConfirm.onclick = async () => {
+                const title = document.getElementById('eventTitle')?.value.trim() || 'Untitled';
+                const desc = document.getElementById('eventDesc')?.value.trim() || '';
+                const eventDate = document.getElementById('eventDate')?.value || '';
+                const time = document.getElementById('eventTime')?.value || '';
+                const location = document.getElementById('eventLocation')?.value.trim() || '';
+                const coverImage = document.getElementById('eventImage')?.value.trim() || '';
+                const status = document.getElementById('eventStatus')?.value || 'Upcoming';
+                if (!title) { showToast('Please enter a title.', 'warning'); return; }
+                const payload = { title, description: desc, eventDate, time, location, coverImage, status,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                try {
+                    if (isEdit) {
+                        await db.collection('events').doc(editData.id).update(payload);
+                        showToast('Event updated', 'success');
+                    } else {
+                        payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('events').add(payload);
+                        showToast('Event added', 'success');
                     }
-                };
-            });
+                    closeModal(true);
+                    loadEvents();
+                } catch (err) {
+                    showToast('Error: ' + err.message, 'error');
+                }
+            };
         }
 
         window.editEvent = async function(id) {
@@ -3099,14 +2938,12 @@
             const filter = $('#courseStatusFilter')?.value || 'all';
             let items = allCourses;
             if (filter !== 'all') items = items.filter(c => (c.status || 'Active') === filter);
-
             if (items.length === 0) {
                 wrap.innerHTML =
                     `<div class="empty-state-inline"><i class="fas fa-book-open"></i><p>No courses. <button class="btn btn-gold btn-sm" id="addCourseBtn2"><i class="fas fa-plus"></i> Add</button></p></div>`;
                 document.getElementById('addCourseBtn2')?.addEventListener('click', () => showAddCourse());
                 return;
             }
-
             let html = `<table><thead><tr><th>Course</th><th>Duration</th><th>Eligibility</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead><tbody>`;
             items.forEach(c => {
                 const status = c.status || 'Active';
@@ -3118,8 +2955,8 @@
                         <td>${c.eligibility || '—'}</td>
                         <td><span class="badge ${badgeCls}">${status}</span></td>
                         <td style="text-align:right;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
-                            <button class="btn btn-primary btn-xs" onclick="editCourse('${c.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-xs" onclick="deleteCourse('${c.id}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-primary btn-xs" onclick="window.editCourse('${c.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-xs" onclick="window.deleteCourse('${c.id}')"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
             });
@@ -3136,7 +2973,6 @@
             const isEdit = !!editData;
             const data = isEdit ? editData : { name: '', shortDesc: '', description: '', duration: '', eligibility: '',
                 status: 'Active', order: 0, imageUrl: '' };
-
             await openModal(isEdit ? 'Edit Course' : 'Add Course', `
                     <div class="form-group"><label>Course Name <span class="required">*</span></label><input id="courseName" value="${data.name||''}" placeholder="e.g. B.Sc. Computer Science" /></div>
                     <div class="form-group"><label>Short Description</label><input id="courseShort" value="${data.shortDesc||''}" placeholder="Brief description" /></div>
@@ -3155,38 +2991,33 @@
                         </select>
                     </div>
                 `, isEdit ? 'Update' : 'Add', 'Cancel', true);
-
-            return new Promise((resolve) => {
-                modalConfirm.onclick = async () => {
-                    const name = document.getElementById('courseName')?.value.trim() || 'Untitled';
-                    const shortDesc = document.getElementById('courseShort')?.value.trim() || '';
-                    const description = document.getElementById('courseDesc')?.value.trim() || '';
-                    const duration = document.getElementById('courseDuration')?.value.trim() || '';
-                    const eligibility = document.getElementById('courseEligibility')?.value.trim() || '';
-                    const imageUrl = document.getElementById('courseImage')?.value.trim() || '';
-                    const order = parseInt(document.getElementById('courseOrder')?.value) || 0;
-                    const status = document.getElementById('courseStatus')?.value || 'Active';
-
-                    if (!name) { showToast('Please enter a course name.', 'warning'); return; }
-
-                    const payload = { name, shortDesc, description, duration, eligibility, imageUrl, order, status,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-                    try {
-                        if (isEdit) {
-                            await db.collection('courses').doc(editData.id).update(payload);
-                            showToast('Course updated', 'success');
-                        } else {
-                            payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                            await db.collection('courses').add(payload);
-                            showToast('Course added', 'success');
-                        }
-                        closeModal(true);
-                        loadCourses();
-                    } catch (err) {
-                        showToast('Error: ' + err.message, 'error');
+            modalConfirm.onclick = async () => {
+                const name = document.getElementById('courseName')?.value.trim() || 'Untitled';
+                const shortDesc = document.getElementById('courseShort')?.value.trim() || '';
+                const description = document.getElementById('courseDesc')?.value.trim() || '';
+                const duration = document.getElementById('courseDuration')?.value.trim() || '';
+                const eligibility = document.getElementById('courseEligibility')?.value.trim() || '';
+                const imageUrl = document.getElementById('courseImage')?.value.trim() || '';
+                const order = parseInt(document.getElementById('courseOrder')?.value) || 0;
+                const status = document.getElementById('courseStatus')?.value || 'Active';
+                if (!name) { showToast('Please enter a course name.', 'warning'); return; }
+                const payload = { name, shortDesc, description, duration, eligibility, imageUrl, order, status,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                try {
+                    if (isEdit) {
+                        await db.collection('courses').doc(editData.id).update(payload);
+                        showToast('Course updated', 'success');
+                    } else {
+                        payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('courses').add(payload);
+                        showToast('Course added', 'success');
                     }
-                };
-            });
+                    closeModal(true);
+                    loadCourses();
+                } catch (err) {
+                    showToast('Error: ' + err.message, 'error');
+                }
+            };
         }
 
         window.editCourse = async function(id) {
@@ -3196,8 +3027,8 @@
         };
 
         window.deleteCourse = async function(id) {
-            const confirm = await openModal('Delete Course', `<p>Delete this course permanently?</p>`, 'Delete', 'Cancel',
-                true);
+            const confirm = await openModal('Delete Course', `<p>Delete this course permanently?</p>`, 'Delete',
+                'Cancel', true);
             if (confirm) {
                 try {
                     await db.collection('courses').doc(id).delete();
@@ -3233,7 +3064,6 @@
                 document.getElementById('addFacultyBtn2')?.addEventListener('click', () => showAddFaculty());
                 return;
             }
-
             let html = `<table><thead><tr><th>Name</th><th>Designation</th><th>Department</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead><tbody>`;
             allFaculty.forEach(f => {
                 const status = f.status || 'Active';
@@ -3244,8 +3074,8 @@
                         <td>${f.department || '—'}</td>
                         <td><span class="badge ${badgeCls}">${status}</span></td>
                         <td style="text-align:right;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
-                            <button class="btn btn-primary btn-xs" onclick="editFaculty('${f.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-xs" onclick="deleteFaculty('${f.id}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-primary btn-xs" onclick="window.editFaculty('${f.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-xs" onclick="window.deleteFaculty('${f.id}')"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
             });
@@ -3261,7 +3091,6 @@
             const isEdit = !!editData;
             const data = isEdit ? editData : { name: '', designation: '', department: '', qualification: '',
                 experience: '', bio: '', photo: '', order: 0, status: 'Active' };
-
             await openModal(isEdit ? 'Edit Faculty' : 'Add Faculty', `
                     <div class="form-row">
                         <div class="form-group"><label>Name <span class="required">*</span></label><input id="facultyName" value="${data.name||''}" placeholder="Full name" /></div>
@@ -3282,37 +3111,33 @@
                         </select>
                     </div>
                 `, isEdit ? 'Update' : 'Add', 'Cancel', true);
-
-            return new Promise((resolve) => {
-                modalConfirm.onclick = async () => {
-                    const name = document.getElementById('facultyName')?.value.trim() || '—';
-                    const designation = document.getElementById('facultyDesignation')?.value.trim() || '';
-                    const department = document.getElementById('facultyDept')?.value.trim() || '';
-                    const qualification = document.getElementById('facultyQual')?.value.trim() || '';
-                    const experience = document.getElementById('facultyExp')?.value.trim() || '';
-                    const bio = document.getElementById('facultyBio')?.value.trim() || '';
-                    const photo = document.getElementById('facultyPhoto')?.value.trim() || '';
-                    const order = parseInt(document.getElementById('facultyOrder')?.value) || 0;
-                    const status = document.getElementById('facultyStatus')?.value || 'Active';
-
-                    const payload = { name, designation, department, qualification, experience, bio, photo, order,
-                        status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-                    try {
-                        if (isEdit) {
-                            await db.collection('faculty').doc(editData.id).update(payload);
-                            showToast('Faculty updated', 'success');
-                        } else {
-                            payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                            await db.collection('faculty').add(payload);
-                            showToast('Faculty added', 'success');
-                        }
-                        closeModal(true);
-                        loadFaculty();
-                    } catch (err) {
-                        showToast('Error: ' + err.message, 'error');
+            modalConfirm.onclick = async () => {
+                const name = document.getElementById('facultyName')?.value.trim() || '—';
+                const designation = document.getElementById('facultyDesignation')?.value.trim() || '';
+                const department = document.getElementById('facultyDept')?.value.trim() || '';
+                const qualification = document.getElementById('facultyQual')?.value.trim() || '';
+                const experience = document.getElementById('facultyExp')?.value.trim() || '';
+                const bio = document.getElementById('facultyBio')?.value.trim() || '';
+                const photo = document.getElementById('facultyPhoto')?.value.trim() || '';
+                const order = parseInt(document.getElementById('facultyOrder')?.value) || 0;
+                const status = document.getElementById('facultyStatus')?.value || 'Active';
+                const payload = { name, designation, department, qualification, experience, bio, photo, order, status,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                try {
+                    if (isEdit) {
+                        await db.collection('faculty').doc(editData.id).update(payload);
+                        showToast('Faculty updated', 'success');
+                    } else {
+                        payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('faculty').add(payload);
+                        showToast('Faculty added', 'success');
                     }
-                };
-            });
+                    closeModal(true);
+                    loadFaculty();
+                } catch (err) {
+                    showToast('Error: ' + err.message, 'error');
+                }
+            };
         }
 
         window.editFaculty = async function(id) {
@@ -3359,7 +3184,6 @@
                 document.getElementById('addFacilityBtn2')?.addEventListener('click', () => showAddFacility());
                 return;
             }
-
             let html = `<table><thead><tr><th>Name</th><th>Description</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead><tbody>`;
             allFacilities.forEach(f => {
                 const status = f.status || 'Active';
@@ -3369,8 +3193,8 @@
                         <td>${(f.description||'').slice(0,50)}${(f.description||'').length>50?'...':''}</td>
                         <td><span class="badge ${badgeCls}">${status}</span></td>
                         <td style="text-align:right;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
-                            <button class="btn btn-primary btn-xs" onclick="editFacility('${f.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-xs" onclick="deleteFacility('${f.id}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-primary btn-xs" onclick="window.editFacility('${f.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-xs" onclick="window.deleteFacility('${f.id}')"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
             });
@@ -3386,7 +3210,6 @@
             const isEdit = !!editData;
             const data = isEdit ? editData : { name: '', description: '', icon: 'fa-building', imageUrl: '', order: 0,
                 status: 'Active' };
-
             await openModal(isEdit ? 'Edit Facility' : 'Add Facility', `
                     <div class="form-group"><label>Name <span class="required">*</span></label><input id="facilityName" value="${data.name||''}" placeholder="e.g. Library" /></div>
                     <div class="form-group"><label>Description</label><textarea id="facilityDesc" rows="2">${data.description||''}</textarea></div>
@@ -3400,34 +3223,30 @@
                         </select>
                     </div>
                 `, isEdit ? 'Update' : 'Add', 'Cancel', true);
-
-            return new Promise((resolve) => {
-                modalConfirm.onclick = async () => {
-                    const name = document.getElementById('facilityName')?.value.trim() || 'Untitled';
-                    const description = document.getElementById('facilityDesc')?.value.trim() || '';
-                    const icon = document.getElementById('facilityIcon')?.value.trim() || 'fa-building';
-                    const imageUrl = document.getElementById('facilityImage')?.value.trim() || '';
-                    const order = parseInt(document.getElementById('facilityOrder')?.value) || 0;
-                    const status = document.getElementById('facilityStatus')?.value || 'Active';
-
-                    const payload = { name, description, icon, imageUrl, order, status,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-                    try {
-                        if (isEdit) {
-                            await db.collection('facilities').doc(editData.id).update(payload);
-                            showToast('Facility updated', 'success');
-                        } else {
-                            payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                            await db.collection('facilities').add(payload);
-                            showToast('Facility added', 'success');
-                        }
-                        closeModal(true);
-                        loadFacilities();
-                    } catch (err) {
-                        showToast('Error: ' + err.message, 'error');
+            modalConfirm.onclick = async () => {
+                const name = document.getElementById('facilityName')?.value.trim() || 'Untitled';
+                const description = document.getElementById('facilityDesc')?.value.trim() || '';
+                const icon = document.getElementById('facilityIcon')?.value.trim() || 'fa-building';
+                const imageUrl = document.getElementById('facilityImage')?.value.trim() || '';
+                const order = parseInt(document.getElementById('facilityOrder')?.value) || 0;
+                const status = document.getElementById('facilityStatus')?.value || 'Active';
+                const payload = { name, description, icon, imageUrl, order, status,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                try {
+                    if (isEdit) {
+                        await db.collection('facilities').doc(editData.id).update(payload);
+                        showToast('Facility updated', 'success');
+                    } else {
+                        payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('facilities').add(payload);
+                        showToast('Facility added', 'success');
                     }
-                };
-            });
+                    closeModal(true);
+                    loadFacilities();
+                } catch (err) {
+                    showToast('Error: ' + err.message, 'error');
+                }
+            };
         }
 
         window.editFacility = async function(id) {
@@ -3473,7 +3292,6 @@
                 document.getElementById('addDocumentBtn2')?.addEventListener('click', () => showAddDocument());
                 return;
             }
-
             let html = `<table><thead><tr><th>Title</th><th>Category</th><th>Date</th><th style="text-align:right;">Actions</th></tr></thead><tbody>`;
             allDocuments.forEach(d => {
                 const date = d.createdAt ? new Date(d.createdAt.seconds * 1000).toLocaleDateString() : '—';
@@ -3484,7 +3302,7 @@
                         <td style="text-align:right;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;">
                             ${d.fileUrl ? `<a href="${d.fileUrl}" target="_blank" class="btn btn-primary btn-xs"><i class="fas fa-eye"></i></a>` : ''}
                             ${d.fileUrl ? `<a href="${d.fileUrl}" download class="btn btn-success btn-xs"><i class="fas fa-download"></i></a>` : ''}
-                            <button class="btn btn-danger btn-xs" onclick="deleteDocument('${d.id}')"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-danger btn-xs" onclick="window.deleteDocument('${d.id}')"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>`;
             });
@@ -3499,7 +3317,6 @@
         async function showAddDocument(editData = null) {
             const isEdit = !!editData;
             const data = isEdit ? editData : { title: '', category: 'General', fileUrl: '' };
-
             await openModal(isEdit ? 'Edit Document' : 'Upload Document', `
                     <div class="form-group"><label>Title <span class="required">*</span></label><input id="docTitle" value="${data.title||''}" placeholder="Document title" /></div>
                     <div class="form-group"><label>Category</label>
@@ -3519,65 +3336,44 @@
                     </div>
                     ${isEdit ? `<div class="form-group"><label>Current File URL</label><input id="docFileUrl" value="${data.fileUrl||''}" placeholder="https://..." /></div>` : ''}
                 `, isEdit ? 'Update' : 'Upload', 'Cancel', true);
-
-            return new Promise((resolve) => {
-                modalConfirm.onclick = async () => {
-                    const title = document.getElementById('docTitle')?.value.trim() || 'Untitled';
-                    const category = document.getElementById('docCategory')?.value || 'General';
-                    let fileUrl = isEdit ? document.getElementById('docFileUrl')?.value.trim() || data.fileUrl || '' :
-                        '';
-
-                    const file = document.getElementById('docFileInput')?.files[0];
-                    if (file) {
-                        try {
-                            const progressBar = document.querySelector('#docUploadProgress .progress-bar');
-                            const progressWrap = document.getElementById('docUploadProgress');
-                            progressWrap.classList.add('show');
-                            const storageRef = storage.ref(`documents/${Date.now()}_${file.name}`);
-                            const uploadTask = storageRef.put(file);
-                            uploadTask.on('state_changed',
-                                (snap) => {
-                                    const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
-                                    progressBar.style.width = pct + '%';
-                                },
-                                (err) => {
-                                    showToast('Upload failed: ' + err.message, 'error');
-                                    progressWrap.classList.remove('show');
-                                }
-                            );
-                            const snapshot = await uploadTask;
-                            fileUrl = await snapshot.ref.getDownloadURL();
-                            progressWrap.classList.remove('show');
-                            showToast('File uploaded', 'success');
-                        } catch (err) {
-                            showToast('Upload error: ' + err.message, 'error');
-                            return;
-                        }
-                    }
-
-                    if (!fileUrl && !isEdit) {
-                        showToast('Please upload a file.', 'warning');
+            modalConfirm.onclick = async () => {
+                const title = document.getElementById('docTitle')?.value.trim() || 'Untitled';
+                const category = document.getElementById('docCategory')?.value || 'General';
+                let fileUrl = isEdit ? document.getElementById('docFileUrl')?.value.trim() || data.fileUrl || '' : '';
+                const file = document.getElementById('docFileInput')?.files[0];
+                if (file) {
+                    try {
+                        const progressBar = document.querySelector('#docUploadProgress .progress-bar');
+                        const progressWrap = document.getElementById('docUploadProgress');
+                        progressWrap.classList.add('show');
+                        const path = `documents/${Date.now()}_${file.name}`;
+                        fileUrl = await uploadFileToStorage(file, path, (pct) => {
+                            progressBar.style.width = pct + '%';
+                        });
+                        progressWrap.classList.remove('show');
+                        showToast('File uploaded', 'success');
+                    } catch (err) {
+                        showToast('Upload error: ' + err.message, 'error');
                         return;
                     }
-
-                    const payload = { title, category, fileUrl, updatedAt: firebase.firestore.FieldValue
-                            .serverTimestamp() };
-                    try {
-                        if (isEdit) {
-                            await db.collection('documents').doc(editData.id).update(payload);
-                            showToast('Document updated', 'success');
-                        } else {
-                            payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                            await db.collection('documents').add(payload);
-                            showToast('Document uploaded', 'success');
-                        }
-                        closeModal(true);
-                        loadDocuments();
-                    } catch (err) {
-                        showToast('Error: ' + err.message, 'error');
+                }
+                if (!fileUrl && !isEdit) { showToast('Please upload a file.', 'warning'); return; }
+                const payload = { title, category, fileUrl, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+                try {
+                    if (isEdit) {
+                        await db.collection('documents').doc(editData.id).update(payload);
+                        showToast('Document updated', 'success');
+                    } else {
+                        payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('documents').add(payload);
+                        showToast('Document uploaded', 'success');
                     }
-                };
-            });
+                    closeModal(true);
+                    loadDocuments();
+                } catch (err) {
+                    showToast('Error: ' + err.message, 'error');
+                }
+            };
         }
 
         window.deleteDocument = async function(id) {
@@ -3708,17 +3504,12 @@
             }
         });
 
-        // ---- SETTINGS - Profile update ----
+        // ---- SETTINGS ----
         $('#updateProfileBtn')?.addEventListener('click', async () => {
             const name = $('#setAdminName').value.trim();
             const newPass = $('#setNewPassword').value;
             const confirmPass = $('#setConfirmPassword').value;
-
-            if (newPass && newPass !== confirmPass) {
-                showToast('Passwords do not match.', 'error');
-                return;
-            }
-
+            if (newPass && newPass !== confirmPass) { showToast('Passwords do not match.', 'error'); return; }
             try {
                 if (name && currentUser) {
                     await currentUser.updateProfile({ displayName: name });
@@ -3728,9 +3519,7 @@
                     await currentUser.updatePassword(newPass);
                     showToast('Password updated successfully.', 'success');
                 }
-                if (name || newPass) {
-                    showToast('Profile updated successfully.', 'success');
-                }
+                if (name || newPass) showToast('Profile updated successfully.', 'success');
                 $('#setNewPassword').value = '';
                 $('#setConfirmPassword').value = '';
             } catch (err) {
@@ -3738,12 +3527,8 @@
             }
         });
 
-        // Password reset from settings
         $('#resetPasswordBtn')?.addEventListener('click', async () => {
-            if (!currentUser || !currentUser.email) {
-                showToast('No email address found.', 'error');
-                return;
-            }
+            if (!currentUser || !currentUser.email) { showToast('No email address found.', 'error'); return; }
             try {
                 await auth.sendPasswordResetEmail(currentUser.email);
                 showToast('Password reset email sent to ' + currentUser.email, 'success');
@@ -3752,7 +3537,7 @@
             }
         });
 
-        // ---- DASHBOARD STATS ----
+        // ---- DASHBOARD ----
         async function loadDashboard() {
             try {
                 const enqSnap = await db.collection('enquiries').get();
@@ -3761,15 +3546,12 @@
                 const eventSnap = await db.collection('events').where('status', '==', 'Upcoming').get();
                 const courseSnap = await db.collection('courses').get();
                 const facultySnap = await db.collection('faculty').get();
-
                 $('#statEnquiries').textContent = enqSnap.size || 0;
                 $('#statGallery').textContent = gallerySnap.size || 0;
                 $('#statNotices').textContent = noticeSnap.size || 0;
                 $('#statEvents').textContent = eventSnap.size || 0;
                 $('#statCourses').textContent = courseSnap.size || 0;
                 $('#statFaculty').textContent = facultySnap.size || 0;
-
-                // Update enquiry badge
                 const newEnqs = allEnquiries.filter(e => (e.status || 'New') === 'New');
                 const badge = $('#enquiryBadge');
                 if (badge) {
@@ -3777,13 +3559,7 @@
                     badge.style.display = newEnqs.length > 0 ? 'inline' : 'none';
                 }
                 const dot = $('#notifDot');
-                if (dot) {
-                    dot.classList.toggle('hidden', newEnqs.length === 0);
-                }
-
-                // Also update stats in dashboard cards with small trends
-                // (already done via IDs)
-
+                if (dot) dot.classList.toggle('hidden', newEnqs.length === 0);
             } catch (err) {
                 console.error('loadDashboard error:', err);
             }
@@ -3792,12 +3568,8 @@
         // ---- NOTIFICATIONS ----
         async function loadNotifications() {
             try {
-                // Get latest 20 new enquiries as notifications
-                const snap = await db.collection('enquiries')
-                    .where('status', '==', 'New')
-                    .orderBy('timestamp', 'desc')
-                    .limit(20)
-                    .get();
+                const snap = await db.collection('enquiries').where('status', '==', 'New').orderBy('timestamp', 'desc')
+                    .limit(20).get();
                 allNotifications = [];
                 snap.forEach(doc => {
                     const d = doc.data();
@@ -3828,14 +3600,10 @@
                 const timeStr = n.time ? n.time.toLocaleString() : '—';
                 html += `<div class="notif-item" data-id="${n.id}">
                         <span class="notif-dot ${n.read?'read':''}"></span>
-                        <div class="notif-text">
-                            ${n.text}
-                            <span class="notif-time">${timeStr}</span>
-                        </div>
+                        <div class="notif-text">${n.text}<span class="notif-time">${timeStr}</span></div>
                     </div>`;
             });
             list.innerHTML = html;
-            // Click to mark read and navigate to enquiry
             list.querySelectorAll('.notif-item').forEach(el => {
                 el.addEventListener('click', () => {
                     const id = el.dataset.id;
@@ -3845,16 +3613,9 @@
                         unreadCount = allNotifications.filter(n => !n.read).length;
                         updateNotifDot();
                         renderNotifications();
-                        // Navigate to enquiries
                         navigateTo('enquiries');
-                        // Open the enquiry detail
-                        if (notif.enquiryId) {
-                            setTimeout(() => {
-                                viewEnquiry(notif.enquiryId);
-                            }, 300);
-                        }
+                        if (notif.enquiryId) setTimeout(() => window.viewEnquiry(notif.enquiryId), 300);
                     }
-                    // Close dropdown
                     $('#notifDropdown').classList.remove('open');
                 });
             });
@@ -3863,25 +3624,17 @@
 
         function updateNotifDot() {
             const dot = $('#notifDot');
-            if (dot) {
-                dot.classList.toggle('hidden', unreadCount === 0);
-            }
+            if (dot) dot.classList.toggle('hidden', unreadCount === 0);
         }
 
-        // Notification dropdown toggle
         $('#notifBtn')?.addEventListener('click', (e) => {
             e.stopPropagation();
             const dropdown = $('#notifDropdown');
             dropdown.classList.toggle('open');
-            if (dropdown.classList.contains('open')) {
-                loadNotifications();
-            }
+            if (dropdown.classList.contains('open')) loadNotifications();
         });
-        document.addEventListener('click', () => {
-            $('#notifDropdown')?.classList.remove('open');
-        });
+        document.addEventListener('click', () => { $('#notifDropdown')?.classList.remove('open'); });
 
-        // Mark all read
         $('#markAllRead')?.addEventListener('click', () => {
             allNotifications.forEach(n => n.read = true);
             unreadCount = 0;
@@ -3890,29 +3643,21 @@
             showToast('All notifications marked as read', 'info');
         });
 
-        // ---- GLOBAL SEARCH ----
+        // ---- SEARCH ----
         $('#searchTrigger')?.addEventListener('click', openSearch);
         document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                openSearch();
-            }
-            if (e.key === 'Escape') {
-                $('#searchModal').classList.remove('open');
-            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault();
+                openSearch(); }
+            if (e.key === 'Escape') { $('#searchModal').classList.remove('open'); }
         });
 
         function openSearch() {
             const modal = $('#searchModal');
             modal.classList.add('open');
-            setTimeout(() => {
-                document.getElementById('globalSearchInput')?.focus();
-            }, 100);
+            setTimeout(() => document.getElementById('globalSearchInput')?.focus(), 100);
         }
 
-        $('#searchModalClose')?.addEventListener('click', () => {
-            $('#searchModal').classList.remove('open');
-        });
+        $('#searchModalClose')?.addEventListener('click', () => { $('#searchModal').classList.remove('open'); });
         $('#searchModal')?.addEventListener('click', (e) => {
             if (e.target === e.currentTarget) $('#searchModal').classList.remove('open');
         });
@@ -3920,13 +3665,8 @@
         document.getElementById('globalSearchInput')?.addEventListener('input', function() {
             const query = this.value.trim().toLowerCase();
             const results = document.getElementById('globalSearchResults');
-            if (!query) {
-                results.innerHTML = '<div class="empty">Type to start searching...</div>';
-                return;
-            }
-
+            if (!query) { results.innerHTML = '<div class="empty">Type to start searching...</div>'; return; }
             let matches = [];
-            // Search enquiries
             allEnquiries.forEach(e => {
                 const name = (e.fullName || '').toLowerCase();
                 const phone = (e.phone || '');
@@ -3935,47 +3675,36 @@
                     matches.push({ type: 'Enquiry', label: `${e.fullName} (${e.phone})`, id: e.id, view: 'enquiries' });
                 }
             });
-            // Search notices
             allNotices.forEach(n => {
                 if ((n.title || '').toLowerCase().includes(query)) {
                     matches.push({ type: 'Notice', label: n.title, id: n.id, view: 'notices' });
                 }
             });
-            // Search events
             allEvents.forEach(e => {
                 if ((e.title || '').toLowerCase().includes(query)) {
                     matches.push({ type: 'Event', label: e.title, id: e.id, view: 'events' });
                 }
             });
-            // Search courses
             allCourses.forEach(c => {
                 if ((c.name || '').toLowerCase().includes(query)) {
                     matches.push({ type: 'Course', label: c.name, id: c.id, view: 'courses' });
                 }
             });
-            // Search faculty
             allFaculty.forEach(f => {
                 if ((f.name || '').toLowerCase().includes(query)) {
                     matches.push({ type: 'Faculty', label: f.name, id: f.id, view: 'faculty' });
                 }
             });
-            // Search gallery
             allGallery.forEach(g => {
                 if ((g.title || '').toLowerCase().includes(query)) {
                     matches.push({ type: 'Gallery', label: g.title, id: g.id, view: 'gallery' });
                 }
             });
-
-            if (matches.length === 0) {
-                results.innerHTML = '<div class="empty">No results found.</div>';
-                return;
-            }
-
+            if (matches.length === 0) { results.innerHTML = '<div class="empty">No results found.</div>'; return; }
             let html = '';
             matches.slice(0, 15).forEach(m => {
                 html += `<div class="sr-item" data-view="${m.view}" data-id="${m.id}">
-                        <span>${m.label}</span>
-                        <span class="sr-type">${m.type}</span>
+                        <span>${m.label}</span><span class="sr-type">${m.type}</span>
                     </div>`;
             });
             results.innerHTML = html;
@@ -3983,21 +3712,13 @@
                 el.addEventListener('click', () => {
                     $('#searchModal').classList.remove('open');
                     navigateTo(el.dataset.view);
-                    // Optionally open detail
-                    setTimeout(() => {
-                        if (el.dataset.view === 'enquiries') {
-                            viewEnquiry(el.dataset.id);
-                        }
-                    }, 300);
+                    if (el.dataset.view === 'enquiries') setTimeout(() => window.viewEnquiry(el.dataset.id),
+                    300);
                 });
             });
         });
 
-        // ================================================================
-        // KEYBOARD SHORTCUTS
-        // ================================================================
         document.addEventListener('keydown', (e) => {
-            // Escape closes modals
             if (e.key === 'Escape') {
                 if (modalOverlay.classList.contains('open')) closeModal(false);
                 if ($('#searchModal').classList.contains('open')) $('#searchModal').classList.remove('open');
@@ -4005,12 +3726,7 @@
             }
         });
 
-        // ================================================================
-        // INIT — Load dashboard on first load
-        // ================================================================
-        // (Everything is driven by auth state)
-
-        // Make sure loader hides eventually even if Firebase is slow
+        // ---- TIMEOUT LOADER ----
         setTimeout(() => {
             if (appLoader && !appLoader.classList.contains('hidden')) {
                 appLoader.classList.add('hidden');
@@ -4018,9 +3734,7 @@
             }
         }, 5000);
 
-        // ================================================================
-        // EXPOSE GLOBALLY for inline onclick
-        // ================================================================
+        // ---- EXPOSE GLOBALLY ----
         window.KITAdmin = {
             allEnquiries,
             allGallery,
@@ -4052,7 +3766,7 @@
             loadDashboard
         };
 
-        console.log('✅ KIT College Admin Panel loaded.');
+        console.log('✅ KIT College Admin Panel loaded successfully.');
         console.log('🔑 Firebase project:', FIREBASE_CONFIG.projectId);
         console.log('📌 Use Ctrl+K to search.');
         console.log('📌 All data is stored in Firestore.');
