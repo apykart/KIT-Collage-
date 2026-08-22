@@ -2033,6 +2033,35 @@
         const storage = firebase.storage();
         const analytics = firebase.analytics();
 
+        // ---- CLOUDINARY (images only) ----
+        const CLOUDINARY_CLOUD_NAME = "dxbtigfne";
+        const CLOUDINARY_UPLOAD_PRESET = "kit_college_unsigned"; // <-- match the preset name you created
+        const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+        async function uploadImageToCloudinary(file, onProgress) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', CLOUDINARY_UPLOAD_URL, true);
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable && onProgress) onProgress((e.loaded / e.total) * 100);
+                };
+                xhr.onload = () => {
+                    try {
+                        const res = JSON.parse(xhr.responseText);
+                        if (xhr.status >= 200 && xhr.status < 300 && res.secure_url) {
+                            resolve(res.secure_url);
+                        } else {
+                            reject(new Error(res.error?.message || 'Cloudinary upload failed'));
+                        }
+                    } catch (err) { reject(err); }
+                };
+                xhr.onerror = () => reject(new Error('Network error during upload'));
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                xhr.send(formData);
+            });
+        }
         // ================================================================
         // STATE
         // ================================================================
@@ -2693,35 +2722,24 @@
                     const orderVal = parseInt(document.getElementById('galleryOrder')?.value) || 0;
                     let imageUrl = document.getElementById('galleryImageUrl')?.value.trim() || '';
 
-                    // If file uploaded, upload to storage
+// Upload image to Cloudinary (images only)
                     const file = document.getElementById('galleryFileInput')?.files[0];
                     if (file) {
+                        const progressBar = document.querySelector('#galleryUploadProgress .progress-bar');
+                        const progressWrap = document.getElementById('galleryUploadProgress');
+                        progressWrap.classList.add('show');
                         try {
-                            const progressBar = document.querySelector('#galleryUploadProgress .progress-bar');
-                            const progressWrap = document.getElementById('galleryUploadProgress');
-                            progressWrap.classList.add('show');
-                            const storageRef = storage.ref(`gallery/${Date.now()}_${file.name}`);
-                            const uploadTask = storageRef.put(file);
-                            uploadTask.on('state_changed',
-                                (snap) => {
-                                    const pct = (snap.bytesTransferred / snap.totalBytes) * 100;
-                                    progressBar.style.width = pct + '%';
-                                },
-                                (err) => {
-                                    showToast('Upload failed: ' + err.message, 'error');
-                                    progressWrap.classList.remove('show');
-                                }
-                            );
-                            const snapshot = await uploadTask;
-                            imageUrl = await snapshot.ref.getDownloadURL();
+                            imageUrl = await uploadImageToCloudinary(file, (pct) => {
+                                progressBar.style.width = pct + '%';
+                            });
                             progressWrap.classList.remove('show');
                             showToast('Image uploaded successfully', 'success');
                         } catch (err) {
+                            progressWrap.classList.remove('show');
                             showToast('Upload error: ' + err.message, 'error');
                             return;
                         }
                     }
-
                     if (!imageUrl && !isEdit) {
                         showToast('Please provide an image URL or upload an image.', 'warning');
                         return;
