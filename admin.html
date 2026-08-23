@@ -1806,13 +1806,21 @@
                         <div class="form-title">Hero Section</div>
                         <div class="form-group"><label>Hero Heading</label><input id="hpHeroHeading" placeholder="Shape Your Future." /></div>
                         <div class="form-group"><label>Hero Subtitle</label><input id="hpHeroSubtitle" placeholder="Build Your Legacy." /></div>
-                        <div class="form-group"><label>Hero Image URL</label><input id="hpHeroImage" placeholder="https://..." /></div>
+                        <div class="form-group"><label>Hero Image</label>
+    <input type="file" id="hpHeroImageFile" accept="image/*" />
+    <div class="upload-progress" id="hpHeroImgProgress"><div class="progress-bar"></div></div>
+    <input type="hidden" id="hpHeroImage" />
+</div>
                         <div class="form-group"><label>Primary CTA</label><input id="hpCtaPrimary" placeholder="Explore Campus" /></div>
                         <div class="form-group"><label>Secondary CTA</label><input id="hpCtaSecondary" placeholder="Enquire Now" /></div>
                         <div class="form-title mt-16">About Section</div>
                         <div class="form-group"><label>About Heading</label><input id="hpAboutHeading" placeholder="A Place to Learn..." /></div>
                         <div class="form-group"><label>About Description</label><textarea id="hpAboutDesc" rows="3"></textarea></div>
-                        <div class="form-group"><label>About Image URL</label><input id="hpAboutImage" placeholder="https://..." /></div>
+                        <div class="form-group"><label>About Image</label>
+    <input type="file" id="hpAboutImageFile" accept="image/*" />
+    <div class="upload-progress" id="hpAboutImgProgress"><div class="progress-bar"></div></div>
+    <input type="hidden" id="hpAboutImage" />
+</div>
                         <button class="btn btn-gold" id="saveHomepageBtn"><i class="fas fa-save"></i> Save Homepage</button>
                     </div>
                 </section>
@@ -2263,6 +2271,34 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
     });
 }
 
+function compressImage(file, maxWidth = 1280, quality = 0.72) {
+    return new Promise((resolve) => {
+        if (!file.type.startsWith('image/') || file.type === 'image/gif') {
+            resolve(file);
+            return;
+        }
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            img.onload = () => {
+                let { width, height } = img;
+                if (width > maxWidth) {
+                    height = Math.round(height * (maxWidth / width));
+                    width = maxWidth;
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                canvas.toBlob((blob) => {
+                    resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+                }, 'image/jpeg', quality);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
         // ================================================================
         // DATA LOADING
         // ================================================================
@@ -2592,7 +2628,8 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                         const progressWrap = document.getElementById('galleryUploadProgress');
                         progressWrap.classList.add('show');
                         try {
-                            imageUrl = await uploadFileToStorage(file, 'gallery', (pct) => {
+                            const compressedFile = await compressImage(file);
+imageUrl = await uploadFileToStorage(compressedFile, 'gallery', (pct) => {
     progressBar.style.width = pct + '%';
 }, 'image');
                             progressWrap.classList.remove('show');
@@ -2622,8 +2659,8 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
 
                     try {
                         if (isEdit) {
-                            await db.collection('gallery').doc(editData.id).update(dataToSave);
-                            showToast('Gallery updated', 'success');
+    await db.collection('gallery').doc(editData.id).set(dataToSave, { merge: true });
+    showToast('Gallery updated', 'success');
                         } else {
                             dataToSave.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                             dataToSave.status = 'published';
@@ -2749,8 +2786,8 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                 try {
                     if (isEdit) {
-                        await db.collection('notices').doc(editData.id).update(payload);
-                        showToast('Notice updated', 'success');
+    await db.collection('notices').doc(editData.id).set(payload, { merge: true });
+    showToast('Notice updated', 'success');
                     } else {
                         payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                         await db.collection('notices').add(payload);
@@ -2863,7 +2900,11 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                         <div class="form-group"><label>Time</label><input type="time" id="eventTime" value="${data.time||''}" /></div>
                     </div>
                     <div class="form-group"><label>Location</label><input id="eventLocation" value="${data.location||''}" placeholder="Location" /></div>
-                    <div class="form-group"><label>Cover Image URL</label><input id="eventImage" value="${data.coverImage||''}" placeholder="https://..." /></div>
+                    <div class="form-group"><label>Cover Image</label>
+    <input type="file" id="eventImageFile" accept="image/*" />
+    <div class="upload-progress" id="eventImgProgress"><div class="progress-bar"></div></div>
+    ${data.coverImage ? `<div class="image-preview show"><img src="${data.coverImage}" /></div>` : ''}
+</div>
                     <div class="form-group"><label>Status</label>
                         <select id="eventStatus">
                             <option value="Upcoming" ${data.status==='Upcoming'?'selected':''}>Upcoming</option>
@@ -2878,15 +2919,30 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                 const eventDate = document.getElementById('eventDate')?.value || '';
                 const time = document.getElementById('eventTime')?.value || '';
                 const location = document.getElementById('eventLocation')?.value.trim() || '';
-                const coverImage = document.getElementById('eventImage')?.value.trim() || '';
+                let coverImage = data.coverImage || '';
+const eventImgFile = document.getElementById('eventImageFile')?.files[0];
+if (eventImgFile) {
+    const progressBar = document.querySelector('#eventImgProgress .progress-bar');
+    const progressWrap = document.getElementById('eventImgProgress');
+    progressWrap.classList.add('show');
+    try {
+        const compressed = await compressImage(eventImgFile);
+        coverImage = await uploadFileToStorage(compressed, 'events', (pct) => { progressBar.style.width = pct + '%'; }, 'image');
+        progressWrap.classList.remove('show');
+    } catch (err) {
+        progressWrap.classList.remove('show');
+        showToast('Image upload error: ' + err.message, 'error');
+        return;
+    }
+}
                 const status = document.getElementById('eventStatus')?.value || 'Upcoming';
                 if (!title) { showToast('Please enter a title.', 'warning'); return; }
                 const payload = { title, description: desc, eventDate, time, location, coverImage, status,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                 try {
                     if (isEdit) {
-                        await db.collection('events').doc(editData.id).update(payload);
-                        showToast('Event updated', 'success');
+    await db.collection('events').doc(editData.id).set(payload, { merge: true });
+    showToast('Event updated', 'success');
                     } else {
                         payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                         await db.collection('events').add(payload);
@@ -2984,7 +3040,11 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                         <div class="form-group"><label>Duration</label><input id="courseDuration" value="${data.duration||''}" placeholder="e.g. 3 Years" /></div>
                         <div class="form-group"><label>Eligibility</label><input id="courseEligibility" value="${data.eligibility||''}" placeholder="e.g. 10+2" /></div>
                     </div>
-                    <div class="form-group"><label>Image URL</label><input id="courseImage" value="${data.imageUrl||''}" placeholder="https://..." /></div>
+                    <div class="form-group"><label>Course Image</label>
+    <input type="file" id="courseImageFile" accept="image/*" />
+    <div class="upload-progress" id="courseImgProgress"><div class="progress-bar"></div></div>
+    ${data.imageUrl ? `<div class="image-preview show"><img src="${data.imageUrl}" /></div>` : ''}
+</div>
                     <div class="form-group"><label>Display Order</label><input type="number" id="courseOrder" value="${data.order||0}" /></div>
                     <div class="form-group"><label>Status</label>
                         <select id="courseStatus">
@@ -3000,7 +3060,22 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                 const description = document.getElementById('courseDesc')?.value.trim() || '';
                 const duration = document.getElementById('courseDuration')?.value.trim() || '';
                 const eligibility = document.getElementById('courseEligibility')?.value.trim() || '';
-                const imageUrl = document.getElementById('courseImage')?.value.trim() || '';
+                let imageUrl = data.imageUrl || '';
+const courseImgFile = document.getElementById('courseImageFile')?.files[0];
+if (courseImgFile) {
+    const progressBar = document.querySelector('#courseImgProgress .progress-bar');
+    const progressWrap = document.getElementById('courseImgProgress');
+    progressWrap.classList.add('show');
+    try {
+        const compressed = await compressImage(courseImgFile);
+        imageUrl = await uploadFileToStorage(compressed, 'courses', (pct) => { progressBar.style.width = pct + '%'; }, 'image');
+        progressWrap.classList.remove('show');
+    } catch (err) {
+        progressWrap.classList.remove('show');
+        showToast('Image upload error: ' + err.message, 'error');
+        return;
+    }
+}
                 const order = parseInt(document.getElementById('courseOrder')?.value) || 0;
                 const status = document.getElementById('courseStatus')?.value || 'Active';
                 if (!name) { showToast('Please enter a course name.', 'warning'); return; }
@@ -3008,8 +3083,8 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                 try {
                     if (isEdit) {
-                        await db.collection('courses').doc(editData.id).update(payload);
-                        showToast('Course updated', 'success');
+    await db.collection('courses').doc(editData.id).set(payload, { merge: true });
+    showToast('Course updated', 'success');
                     } else {
                         payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                         await db.collection('courses').add(payload);
@@ -3105,7 +3180,11 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                     </div>
                     <div class="form-group"><label>Experience</label><input id="facultyExp" value="${data.experience||''}" placeholder="e.g. 10 Years" /></div>
                     <div class="form-group"><label>Short Bio</label><textarea id="facultyBio" rows="2">${data.bio||''}</textarea></div>
-                    <div class="form-group"><label>Photo URL</label><input id="facultyPhoto" value="${data.photo||''}" placeholder="https://..." /></div>
+                    <div class="form-group"><label>Photo</label>
+    <input type="file" id="facultyPhotoFile" accept="image/*" />
+    <div class="upload-progress" id="facultyPhotoProgress"><div class="progress-bar"></div></div>
+    ${data.photo ? `<div class="image-preview show"><img src="${data.photo}" /></div>` : ''}
+</div>
                     <div class="form-group"><label>Display Order</label><input type="number" id="facultyOrder" value="${data.order||0}" /></div>
                     <div class="form-group"><label>Status</label>
                         <select id="facultyStatus">
@@ -3121,15 +3200,30 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                 const qualification = document.getElementById('facultyQual')?.value.trim() || '';
                 const experience = document.getElementById('facultyExp')?.value.trim() || '';
                 const bio = document.getElementById('facultyBio')?.value.trim() || '';
-                const photo = document.getElementById('facultyPhoto')?.value.trim() || '';
+                let photo = data.photo || '';
+const facultyPhotoFile = document.getElementById('facultyPhotoFile')?.files[0];
+if (facultyPhotoFile) {
+    const progressBar = document.querySelector('#facultyPhotoProgress .progress-bar');
+    const progressWrap = document.getElementById('facultyPhotoProgress');
+    progressWrap.classList.add('show');
+    try {
+        const compressed = await compressImage(facultyPhotoFile);
+        photo = await uploadFileToStorage(compressed, 'faculty', (pct) => { progressBar.style.width = pct + '%'; }, 'image');
+        progressWrap.classList.remove('show');
+    } catch (err) {
+        progressWrap.classList.remove('show');
+        showToast('Image upload error: ' + err.message, 'error');
+        return;
+    }
+}
                 const order = parseInt(document.getElementById('facultyOrder')?.value) || 0;
                 const status = document.getElementById('facultyStatus')?.value || 'Active';
                 const payload = { name, designation, department, qualification, experience, bio, photo, order, status,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                 try {
                     if (isEdit) {
-                        await db.collection('faculty').doc(editData.id).update(payload);
-                        showToast('Faculty updated', 'success');
+    await db.collection('faculty').doc(editData.id).set(payload, { merge: true });
+    showToast('Faculty updated', 'success');
                     } else {
                         payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                         await db.collection('faculty').add(payload);
@@ -3217,7 +3311,11 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                     <div class="form-group"><label>Name <span class="required">*</span></label><input id="facilityName" value="${data.name||''}" placeholder="e.g. Library" /></div>
                     <div class="form-group"><label>Description</label><textarea id="facilityDesc" rows="2">${data.description||''}</textarea></div>
                     <div class="form-group"><label>Icon (FontAwesome class)</label><input id="facilityIcon" value="${data.icon||'fa-building'}" placeholder="e.g. fa-book" /></div>
-                    <div class="form-group"><label>Image URL</label><input id="facilityImage" value="${data.imageUrl||''}" placeholder="https://..." /></div>
+                    <div class="form-group"><label>Image</label>
+    <input type="file" id="facilityImageFile" accept="image/*" />
+    <div class="upload-progress" id="facilityImgProgress"><div class="progress-bar"></div></div>
+    ${data.imageUrl ? `<div class="image-preview show"><img src="${data.imageUrl}" /></div>` : ''}
+</div>
                     <div class="form-group"><label>Display Order</label><input type="number" id="facilityOrder" value="${data.order||0}" /></div>
                     <div class="form-group"><label>Status</label>
                         <select id="facilityStatus">
@@ -3230,15 +3328,30 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                 const name = document.getElementById('facilityName')?.value.trim() || 'Untitled';
                 const description = document.getElementById('facilityDesc')?.value.trim() || '';
                 const icon = document.getElementById('facilityIcon')?.value.trim() || 'fa-building';
-                const imageUrl = document.getElementById('facilityImage')?.value.trim() || '';
+                let imageUrl = data.imageUrl || '';
+const facilityImgFile = document.getElementById('facilityImageFile')?.files[0];
+if (facilityImgFile) {
+    const progressBar = document.querySelector('#facilityImgProgress .progress-bar');
+    const progressWrap = document.getElementById('facilityImgProgress');
+    progressWrap.classList.add('show');
+    try {
+        const compressed = await compressImage(facilityImgFile);
+        imageUrl = await uploadFileToStorage(compressed, 'facilities', (pct) => { progressBar.style.width = pct + '%'; }, 'image');
+        progressWrap.classList.remove('show');
+    } catch (err) {
+        progressWrap.classList.remove('show');
+        showToast('Image upload error: ' + err.message, 'error');
+        return;
+    }
+}
                 const order = parseInt(document.getElementById('facilityOrder')?.value) || 0;
                 const status = document.getElementById('facilityStatus')?.value || 'Active';
                 const payload = { name, description, icon, imageUrl, order, status,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                 try {
                     if (isEdit) {
-                        await db.collection('facilities').doc(editData.id).update(payload);
-                        showToast('Facility updated', 'success');
+    await db.collection('facilities').doc(editData.id).set(payload, { merge: true });
+    showToast('Facility updated', 'success');
                     } else {
                         payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                         await db.collection('facilities').add(payload);
@@ -3362,10 +3475,10 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
                 if (!fileUrl && !isEdit) { showToast('Please upload a file.', 'warning'); return; }
                 const payload = { title, category, fileUrl, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
                 try {
-                    if (isEdit) {
-                        await db.collection('documents').doc(editData.id).update(payload);
-                        showToast('Document updated', 'success');
-                    } else {
+    if (isEdit) {
+        await db.collection('documents').doc(editData.id).set(payload, { merge: true });
+        showToast('Document updated', 'success');
+    } else {
                         payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
                         await db.collection('documents').add(payload);
                         showToast('Document uploaded', 'success');
@@ -3412,26 +3525,59 @@ async function uploadFileToStorage(file, folder, onProgress, resourceType = 'ima
             }
         }
 
-        $('#saveHomepageBtn')?.addEventListener('click', async () => {
-            const data = {
-                heroHeading: $('#hpHeroHeading').value.trim(),
-                heroSubtitle: $('#hpHeroSubtitle').value.trim(),
-                heroImage: $('#hpHeroImage').value.trim(),
-                ctaPrimary: $('#hpCtaPrimary').value.trim(),
-                ctaSecondary: $('#hpCtaSecondary').value.trim(),
-                aboutHeading: $('#hpAboutHeading').value.trim(),
-                aboutDesc: $('#hpAboutDesc').value.trim(),
-                aboutImage: $('#hpAboutImage').value.trim(),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            try {
-                await db.collection('settings').doc('homepage').set(data, { merge: true });
-                showToast('Homepage saved successfully!', 'success');
-            } catch (err) {
-                showToast('Error: ' + err.message, 'error');
-            }
-        });
+$('#saveHomepageBtn')?.addEventListener('click', async () => {
+    let heroImage = $('#hpHeroImage').value.trim();
+    const heroFile = document.getElementById('hpHeroImageFile')?.files[0];
+    if (heroFile) {
+        try {
+            const compressed = await compressImage(heroFile);
+            heroImage = await uploadFileToStorage(compressed, 'homepage', (pct) => {
+                const bar = document.querySelector('#hpHeroImgProgress .progress-bar');
+                document.getElementById('hpHeroImgProgress').classList.add('show');
+                if (bar) bar.style.width = pct + '%';
+            }, 'image');
+            document.getElementById('hpHeroImgProgress').classList.remove('show');
+        } catch (err) {
+            showToast('Hero image upload error: ' + err.message, 'error');
+            return;
+        }
+    }
 
+    let aboutImage = $('#hpAboutImage').value.trim();
+    const aboutFile = document.getElementById('hpAboutImageFile')?.files[0];
+    if (aboutFile) {
+        try {
+            const compressed = await compressImage(aboutFile);
+            aboutImage = await uploadFileToStorage(compressed, 'homepage', (pct) => {
+                const bar = document.querySelector('#hpAboutImgProgress .progress-bar');
+                document.getElementById('hpAboutImgProgress').classList.add('show');
+                if (bar) bar.style.width = pct + '%';
+            }, 'image');
+            document.getElementById('hpAboutImgProgress').classList.remove('show');
+        } catch (err) {
+            showToast('About image upload error: ' + err.message, 'error');
+            return;
+        }
+    }
+
+    const data = {
+        heroHeading: $('#hpHeroHeading').value.trim(),
+        heroSubtitle: $('#hpHeroSubtitle').value.trim(),
+        heroImage,
+        ctaPrimary: $('#hpCtaPrimary').value.trim(),
+        ctaSecondary: $('#hpCtaSecondary').value.trim(),
+        aboutHeading: $('#hpAboutHeading').value.trim(),
+        aboutDesc: $('#hpAboutDesc').value.trim(),
+        aboutImage,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    try {
+        await db.collection('settings').doc('homepage').set(data, { merge: true });
+        showToast('Homepage saved successfully!', 'success');
+    } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+    }
+});
         // ---- CONTACT ----
         async function loadContact() {
             try {
