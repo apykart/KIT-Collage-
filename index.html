@@ -665,8 +665,8 @@
         }
         .about-image img {
             width: 100%;
-            height: 480px;
-            object-fit: cover;
+            height: auto;
+            object-fit: contain;
             transition: var(--transition);
         }
         .about-image:hover img {
@@ -914,6 +914,20 @@
         }
 
         /* ===== GALLERY ===== */
+        
+        .gallery-slider {
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+.gallery-slider img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: opacity 0.5s ease;
+}
         .gallery-section {
             background: var(--white);
         }
@@ -1377,14 +1391,16 @@
             align-items: flex-start;
             gap: 10px;
         }
-        .form-group .consent-wrapper input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin-top: 2px;
-            cursor: pointer;
-            accent-color: var(--gold);
-            flex-shrink: 0;
-        }
+     .form-group .consent-wrapper input[type="checkbox"] {
+    -webkit-appearance: auto;
+    appearance: auto;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--gold);
+    flex-shrink: 0;
+}
         .form-group .consent-wrapper label {
             font-weight: 400;
             font-size: 0.85rem;
@@ -2254,37 +2270,16 @@
     </section>
 
     <!-- ===== GALLERY ===== -->
-    <section class="gallery-section section-padding" id="gallery" aria-label="Image gallery">
-        <div class="container">
-            <div class="text-center fade-up">
-                <span class="section-label">Gallery</span>
-                <h2 class="section-title">Campus in Pictures</h2>
-                <p class="section-subtitle">A glimpse into life at KIT College.</p>
-            </div>
-            <div class="gallery-filters fade-up" id="galleryFilters" role="tablist" aria-label="Gallery filters">
-                <button class="gallery-filter-btn active" data-filter="All" role="tab" aria-selected="true">All</button>
-                <button class="gallery-filter-btn" data-filter="Campus" role="tab" aria-selected="false">Campus</button>
-                <button class="gallery-filter-btn" data-filter="Events" role="tab" aria-selected="false">Events</button>
-                <button class="gallery-filter-btn" data-filter="Activities" role="tab" aria-selected="false">Activities</button>
-                <button class="gallery-filter-btn" data-filter="Infrastructure" role="tab" aria-selected="false">Infrastructure</button>
-                <button class="gallery-filter-btn" data-filter="Students" role="tab" aria-selected="false">Students</button>
-            </div>
-            <div class="gallery-grid" id="galleryGrid" role="region" aria-label="Gallery images">
-                <!-- injected by JS -->
-            </div>
-            <div class="text-center" style="margin-top:32px;">
-                <p style="color:var(--text-muted);margin-bottom:12px;">View our photo albums:</p>
-                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-                    <a href="https://photos.app.goo.gl/sUTmb5Jr1HK5hZGp9" target="_blank" rel="noopener noreferrer"
-                    class="btn btn-navy btn-sm"><i class="fas fa-images"></i> Album 1</a>
-                    <a href="https://photos.app.goo.gl/qRaq5FJR6qNf6gJ48" target="_blank" rel="noopener noreferrer"
-                    class="btn btn-navy btn-sm"><i class="fas fa-images"></i> Album 2</a>
-                    <a href="https://photos.app.goo.gl/jtEF1UeNwBySHmPL8" target="_blank" rel="noopener noreferrer"
-                    class="btn btn-navy btn-sm"><i class="fas fa-images"></i> Album 3</a>
-                </div>
-            </div>
+ <section class="gallery-section section-padding" id="gallery" aria-label="Image gallery">
+    <div class="container">
+        <div class="text-center fade-up">
+            <span class="section-label">Gallery</span>
         </div>
-    </section>
+        <div class="gallery-slider" id="gallerySlider">
+            <img id="gallerySlideImg" src="" alt="KIT College Gallery" />
+        </div>
+    </div>
+</section>
 
     <!-- ===== ADMISSIONS (with Partner Institutions above) ===== -->
     <section class="admissions-section" id="admissions" aria-label="Admissions">
@@ -2857,7 +2852,7 @@ function loadHomepageFromFirestore() {
             if (d.heroImage) document.getElementById('heroBg').style.backgroundImage = `url('${cloudinaryUrl(d.heroImage,1920,1080,'fill')}')`;
             if (d.aboutHeading) document.querySelector('#about .section-title').textContent = d.aboutHeading;
             if (d.aboutDesc) document.querySelector('#about .about-text').textContent = d.aboutDesc;
-            if (d.aboutImage) document.getElementById('aboutImg').src = cloudinaryUrl(d.aboutImage,800,480,'fill');
+            if (d.aboutImage) document.getElementById('aboutImg').src = d.aboutImage;
         })
         .catch(err => console.error('Homepage fetch error:', err));
 }
@@ -2888,7 +2883,7 @@ function loadHomepageFromFirestore() {
                 const aboutImg = document.getElementById('aboutImg');
                 const aboutSource =
                 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1000&q=80';
-                aboutImg.src = cloudinaryUrl(aboutSource, 800, 480, 'fill');
+                aboutImg.src = aboutSource;
                 aboutImg.alt = 'KIT College campus building';
 
 
@@ -2948,39 +2943,34 @@ loadContactFromFirestore();
             /* ================================================================
                GALLERY RENDERING (with Cloudinary URLs)
                ================================================================ */
-            function renderGallery(images) {
-                const grid = document.getElementById('galleryGrid');
-                if (!grid) return;
+            let gallerySlideIndex = 0;
+let gallerySlideImages = [];
+let gallerySlideTimer = null;
 
-                if (!images || images.length === 0) {
-                    grid.innerHTML = `
-                            <div class="gallery-placeholder" style="grid-column:1/-1;text-align:center;padding:40px;">
-                                <p><i class="fas fa-images" style="font-size:2rem;color:#c9a84c;margin-bottom:12px;display:block;"></i>
-                                Campus images will appear here soon.</p>
-                            </div>`;
-                    return;
-                }
+function renderGallery(images) {
+    gallerySlideImages = images && images.length ? images : [];
+    gallerySlideIndex = 0;
+    showGallerySlide();
+    if (gallerySlideTimer) clearInterval(gallerySlideTimer);
+    if (gallerySlideImages.length > 1) {
+        gallerySlideTimer = setInterval(() => {
+            gallerySlideIndex = (gallerySlideIndex + 1) % gallerySlideImages.length;
+            showGallerySlide();
+        }, 3000);
+    }
+}
 
-                grid.innerHTML = images.map((img, index) => {
-                    const category = img.category || 'Campus';
-                    const caption = img.caption || 'KIT College';
-                    const cldUrl = cloudinaryUrl(img.url, 600, 450, 'fill');
-                    return `
-                            <div class="gallery-item" data-category="${category}" data-index="${index}" tabindex="0" role="button" aria-label="View image: ${caption}" style="animation:fadeIn 0.4s ease ${index * 0.05}s both;">
-                                <img src="${cldUrl}" alt="${caption}" loading="lazy" onerror="this.parentElement.classList.add('gallery-placeholder'); this.style.display='none';">
-                                <div class="gallery-overlay">
-                                    <div>
-                                        <div class="gallery-category">${category}</div>
-                                        <div class="gallery-caption">${caption}</div>
-                                    </div>
-                                </div>
-                            </div>`;
-                }).join('');
-
-                initGalleryFilters();
-                initGalleryClick();
-            }
-
+function showGallerySlide() {
+    const imgEl = document.getElementById('gallerySlideImg');
+    if (!imgEl || gallerySlideImages.length === 0) return;
+    const img = gallerySlideImages[gallerySlideIndex];
+    imgEl.style.opacity = 0;
+    setTimeout(() => {
+        imgEl.src = img.url;
+        imgEl.alt = img.caption || 'KIT College';
+        imgEl.style.opacity = 1;
+    }, 300);
+}
             function initGalleryFilters() {
                 const filterBtns = document.querySelectorAll('.gallery-filter-btn');
                 const items = document.querySelectorAll('.gallery-item');
