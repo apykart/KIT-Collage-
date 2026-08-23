@@ -2603,63 +2603,14 @@
                    SITE CONFIG
                    ================================================================ */
             const SITE_CONFIG = {
-                collegeName: "KIT College",
-                location: "Santipuram, Prayagraj, Uttar Pradesh, India",
-                email: "kitcollege8@gmail.com",
-                whatsapp: "918887793275",
-                heroImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80",
-                // Gallery images – each will be served via Cloudinary fetch with transformations
-                campusImages: [{
-                    url: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&q=80",
-                    category: "Campus",
-                    caption: "Main Campus Building"
-                }, {
-                    url: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&q=80",
-                    category: "Campus",
-                    caption: "Campus Walkway"
-                }, {
-                    url: "https://images.unsplash.com/photo-1562774053-701939374585?w=1200&q=80",
-                    category: "Infrastructure",
-                    caption: "College Building"
-                }, {
-                    url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&q=80",
-                    category: "Students",
-                    caption: "Students Studying"
-                }, {
-                    url: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=1200&q=80",
-                    category: "Infrastructure",
-                    caption: "Classroom"
-                }, {
-                    url: "https://images.unsplash.com/photo-1577896851231-70ef18881754?w=1200&q=80",
-                    category: "Events",
-                    caption: "Campus Event"
-                }, {
-                    url: "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=1200&q=80",
-                    category: "Events",
-                    caption: "Graduation Day"
-                }, {
-                    url: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=1200&q=80",
-                    category: "Students",
-                    caption: "Student Life"
-                }, {
-                    url: "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=1200&q=80",
-                    category: "Infrastructure",
-                    caption: "Library"
-                }, {
-                    url: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&q=80",
-                    category: "Campus",
-                    caption: "Campus Life"
-                }, {
-                    url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80",
-                    category: "Activities",
-                    caption: "Group Study"
-                }, {
-                    url: "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=1200&q=80",
-                    category: "Students",
-                    caption: "University Hall"
-                }],
-                notices: []
-            };
+    collegeName: "KIT College",
+    location: "Santipuram, Prayagraj, Uttar Pradesh, India",
+    email: "kitcollege8@gmail.com",
+    whatsapp: "918887793275",
+    heroImage: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&q=80",
+    campusImages: [],
+    notices: []
+};
 
             /* ================================================================
                UTILITY: Cloudinary URL builder
@@ -2677,23 +2628,22 @@
             /* ================================================================
                FIRESTORE SYNC — pulls admin-added gallery images & notices
                ================================================================ */
-            function loadGalleryFromFirestore() {
-                db.collection('gallery').orderBy('order', 'asc').get()
-                    .then((snapshot) => {
-                        if (snapshot.empty) return;
-                        const firestoreImages = snapshot.docs.map(doc => {
-                            const d = doc.data();
-                            return {
-                                url: d.imageUrl,
-                                category: d.category || 'Campus',
-                                caption: d.title || d.caption || 'KIT College'
-                            };
-                        });
-                        SITE_CONFIG.campusImages = firestoreImages.concat(SITE_CONFIG.campusImages);
-                        renderGallery(SITE_CONFIG.campusImages);
-                    })
-                    .catch(err => console.error('Gallery fetch error:', err));
-            }
+function loadGalleryFromFirestore() {
+    db.collection('gallery').orderBy('order', 'asc').get()
+        .then((snapshot) => {
+            const firestoreImages = snapshot.docs.map(doc => {
+                const d = doc.data();
+                return {
+                    url: d.imageUrl,
+                    category: d.category || 'Campus',
+                    caption: d.title || d.caption || 'KIT College'
+                };
+            });
+            SITE_CONFIG.campusImages = firestoreImages;
+            renderGallery(SITE_CONFIG.campusImages);
+        })
+        .catch(err => console.error('Gallery fetch error:', err));
+}
             
             function loadCoursesFromFirestore() {
     db.collection('courses').where('status', '==', 'Active').get()
@@ -2961,8 +2911,17 @@ function renderGallery(images) {
 }
 
 function showGallerySlide() {
-    const imgEl = document.getElementById('gallerySlideImg');
-    if (!imgEl || gallerySlideImages.length === 0) return;
+    const slider = document.getElementById('gallerySlider');
+    if (!slider) return;
+    if (gallerySlideImages.length === 0) {
+        slider.innerHTML = `<div style="padding:60px 20px;text-align:center;background:var(--off-white);color:var(--text-muted);"><i class="fas fa-images" style="font-size:2rem;color:var(--gold);margin-bottom:12px;display:block;"></i>Campus images will appear here soon.</div>`;
+        return;
+    }
+    let imgEl = document.getElementById('gallerySlideImg');
+    if (!imgEl) {
+        slider.innerHTML = `<img id="gallerySlideImg" src="" alt="KIT College Gallery" style="width:100%;height:auto;display:block;transition:opacity 0.5s ease;" />`;
+        imgEl = document.getElementById('gallerySlideImg');
+    }
     const img = gallerySlideImages[gallerySlideIndex];
     imgEl.style.opacity = 0;
     setTimeout(() => {
