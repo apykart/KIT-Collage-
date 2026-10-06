@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KIT College | Santipuram, Prayagraj</title>
@@ -406,8 +407,11 @@
             .partner-section .partner-logos a { font-size: 0.7rem; }
             .partner-section .partner-logos .partner-badge { font-size: 0.7rem; padding: 4px 12px 4px 8px; }
         }
-    ins.adsbygoogle[data-ad-status="unfilled"]{display:none!important}
-.ad-container:has(ins[data-ad-status="unfilled"]){display:none}
+    .ad-container{height:0;min-height:0;padding:0;margin:0 auto;border:none;background:transparent;overflow:hidden}
+.ad-container.ad-show{height:auto;padding:16px;margin:32px auto;border:1px dashed #ddd;background:#fafafa}
+.ad-container .ad-label{display:none}
+.ad-container.ad-show .ad-label{display:block}
+ins.adsbygoogle[data-ad-status="unfilled"]{display:none!important}
     </style>
 </head>
 <body>
@@ -1580,6 +1584,19 @@
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
         return emailRegex.test(email);
     }
+
+        (function () {
+        document.querySelectorAll('.ad-container').forEach(function (box) {
+            var ins = box.querySelector('ins.adsbygoogle');
+            if (!ins) return;
+            function check() {
+                if (ins.getAttribute('data-ad-status') === 'filled') box.classList.add('ad-show');
+                else box.classList.remove('ad-show');
+            }
+            new MutationObserver(check).observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
+            check();
+        });
+    })();
 
     window.KITCollege = {
         SITE_CONFIG,
